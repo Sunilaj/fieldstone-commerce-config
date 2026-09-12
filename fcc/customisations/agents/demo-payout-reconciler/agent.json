@@ -1,0 +1,19 @@
+{
+  "slug": "demo-payout-reconciler",
+  "name": "Payout Reconciler",
+  "description": "Matches settlement to gateway and reports the gap.",
+  "tier": "assisted",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

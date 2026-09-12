@@ -1,0 +1,19 @@
+{
+  "slug": "demo-ticket-summariser",
+  "name": "Ticket Summariser",
+  "description": "Condenses a long ticket thread for whoever picks it up.",
+  "tier": "assisted",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

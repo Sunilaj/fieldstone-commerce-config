@@ -1,0 +1,5 @@
+{
+  "name": "Order Desk",
+  "description": "Works the order queue; no pricing or catalogue rights.",
+  "permissions": []
+}

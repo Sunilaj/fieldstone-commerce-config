@@ -1,0 +1,19 @@
+{
+  "slug": "demo-cart-rescuer",
+  "name": "Cart Rescuer",
+  "description": "Spots abandoned carts worth a nudge and drafts it.",
+  "tier": "assisted",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

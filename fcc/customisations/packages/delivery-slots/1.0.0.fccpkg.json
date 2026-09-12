@@ -1,0 +1,614 @@
+{
+  "manifest": {
+    "format": "fcc.customisation/v1",
+    "key": "delivery-slots",
+    "name": "delivery-slots",
+    "version": "1.0.0",
+    "requiresApi": "v1",
+    "originTenant": "fieldstone-dev",
+    "exportedAt": "2026-09-12T04:08:26.414Z"
+  },
+  "elements": [
+    {
+      "kind": "branding",
+      "refKey": "default",
+      "payload": {
+        "primaryColor": "#1F2937",
+        "logoUrl": null
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Auto-approve clean reviews 14",
+      "payload": {
+        "name": "Auto-approve clean reviews 14",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "review.submitted",
+        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Auto-approve clean reviews 18",
+      "payload": {
+        "name": "Auto-approve clean reviews 18",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "review.submitted",
+        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Auto-approve clean reviews 2",
+      "payload": {
+        "name": "Auto-approve clean reviews 2",
+        "tier": "lowcode",
+        "trigger": "webhook_event",
+        "triggerKey": "review.submitted",
+        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Auto-approve clean reviews 23",
+      "payload": {
+        "name": "Auto-approve clean reviews 23",
+        "tier": "lowcode",
+        "trigger": "webhook_event",
+        "triggerKey": "review.submitted",
+        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Auto-approve clean reviews 3",
+      "payload": {
+        "name": "Auto-approve clean reviews 3",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "review.submitted",
+        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Delayed order ticket 20",
+      "payload": {
+        "name": "Delayed order ticket 20",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "order.status_changed",
+        "code": "if (data.status !== \"delayed\") return {};\nreturn { actions: [{ action: \"create_ticket\", subject: \"Order delayed\", category: \"orders\", priority: \"high\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Delayed order ticket 25",
+      "payload": {
+        "name": "Delayed order ticket 25",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "order.status_changed",
+        "code": "if (data.status !== \"delayed\") return {};\nreturn { actions: [{ action: \"create_ticket\", subject: \"Order delayed\", category: \"orders\", priority: \"high\" }] };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Delayed order ticket 26",
+      "payload": {
+        "name": "Delayed order ticket 26",
+        "tier": "fullcode",
+        "trigger": "webhook_event",
+        "triggerKey": "order.status_changed",
+        "code": "if (data.status !== \"delayed\") return {};\nreturn { actions: [{ action: \"create_ticket\", subject: \"Order delayed\", category: \"orders\", priority: \"high\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Delayed order ticket 9",
+      "payload": {
+        "name": "Delayed order ticket 9",
+        "tier": "lowcode",
+        "trigger": "webhook_event",
+        "triggerKey": "order.status_changed",
+        "code": "if (data.status !== \"delayed\") return {};\nreturn { actions: [{ action: \"create_ticket\", subject: \"Order delayed\", category: \"orders\", priority: \"high\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Low stock ticket 1",
+      "payload": {
+        "name": "Low stock ticket 1",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "stock.movement",
+        "code": "return { actions: [{ action: \"create_ticket\", subject: \"Low stock on \" + data.sku, category: \"inventory\", priority: \"medium\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Low stock ticket 10",
+      "payload": {
+        "name": "Low stock ticket 10",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "stock.movement",
+        "code": "return { actions: [{ action: \"create_ticket\", subject: \"Low stock on \" + data.sku, category: \"inventory\", priority: \"medium\" }] };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Low stock ticket 11",
+      "payload": {
+        "name": "Low stock ticket 11",
+        "tier": "fullcode",
+        "trigger": "webhook_event",
+        "triggerKey": "stock.movement",
+        "code": "return { actions: [{ action: \"create_ticket\", subject: \"Low stock on \" + data.sku, category: \"inventory\", priority: \"medium\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Low stock ticket 6",
+      "payload": {
+        "name": "Low stock ticket 6",
+        "tier": "fullcode",
+        "trigger": "webhook_event",
+        "triggerKey": "stock.movement",
+        "code": "return { actions: [{ action: \"create_ticket\", subject: \"Low stock on \" + data.sku, category: \"inventory\", priority: \"medium\" }] };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Manual reconcile 19",
+      "payload": {
+        "name": "Manual reconcile 19",
+        "tier": "nocode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "return { note: \"reconciled\" };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Manual reconcile 21",
+      "payload": {
+        "name": "Manual reconcile 21",
+        "tier": "nocode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "return { note: \"reconciled\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Manual reconcile 22",
+      "payload": {
+        "name": "Manual reconcile 22",
+        "tier": "lowcode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "return { note: \"reconciled\" };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Manual reconcile 24",
+      "payload": {
+        "name": "Manual reconcile 24",
+        "tier": "lowcode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "return { note: \"reconciled\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Manual reconcile 27",
+      "payload": {
+        "name": "Manual reconcile 27",
+        "tier": "fullcode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "return { note: \"reconciled\" };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Manual reconcile 28",
+      "payload": {
+        "name": "Manual reconcile 28",
+        "tier": "nocode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "return { note: \"reconciled\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 12",
+      "payload": {
+        "name": "Weekly tidy 12",
+        "tier": "lowcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 13",
+      "payload": {
+        "name": "Weekly tidy 13",
+        "tier": "nocode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 15",
+      "payload": {
+        "name": "Weekly tidy 15",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 16",
+      "payload": {
+        "name": "Weekly tidy 16",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 17",
+      "payload": {
+        "name": "Weekly tidy 17",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 29",
+      "payload": {
+        "name": "Weekly tidy 29",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 30",
+      "payload": {
+        "name": "Weekly tidy 30",
+        "tier": "lowcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 4",
+      "payload": {
+        "name": "Weekly tidy 4",
+        "tier": "nocode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 5",
+      "payload": {
+        "name": "Weekly tidy 5",
+        "tier": "nocode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 7",
+      "payload": {
+        "name": "Weekly tidy 7",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 8",
+      "payload": {
+        "name": "Weekly tidy 8",
+        "tier": "nocode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-14-audit-log",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-15-enterprise-sso",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-17-webhooks",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-18-feature-flags",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-20-studio",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-21-notifications",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-23-app-of-apps",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-24-admin-chat",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-26-agentic-os",
+      "payload": {
+        "enabled": true,
+        "variant": "B"
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-28-i18n",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-30-perf-tests",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-33-insights",
+      "payload": {
+        "enabled": true,
+        "variant": "B"
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-34-event-fabric",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-44-ucp",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-46-soft-delete",
+      "payload": {
+        "enabled": true,
+        "variant": "A"
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-47-tenant-continuity",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-53-customisation-packages",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "seller-portal",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Catalogue Manager",
+      "payload": {
+        "description": "Adds and edits products, cannot see orders or payouts.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Data Analyst",
+      "payload": {
+        "description": "Insights and dashboards; no write path into commerce.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Delivery Ops",
+      "payload": {
+        "description": null,
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Finance",
+      "payload": {
+        "description": "Settlements, invoices and payouts. Read-only on commerce.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Integrations",
+      "payload": {
+        "description": "API keys, webhooks and endpoint configuration.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Marketing",
+      "payload": {
+        "description": "Promotions and campaigns, and the analytics behind them.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Order Desk",
+      "payload": {
+        "description": "Works the order queue; no pricing or catalogue rights.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Read-only Auditor",
+      "payload": {
+        "description": "Sees everything, changes nothing.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Seller Ops",
+      "payload": {
+        "description": "Onboards and suspends sellers; cannot touch their pricing.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Support Lead",
+      "payload": {
+        "description": "Tickets and customers, plus the right to issue a refund.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Warehouse",
+      "payload": {
+        "description": "Stock and fulfilment only.",
+        "permissions": []
+      }
+    }
+  ],
+  "checksum": "fnv1a-0799a9e1-60"
+}

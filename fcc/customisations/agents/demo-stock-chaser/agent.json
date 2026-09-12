@@ -1,0 +1,19 @@
+{
+  "slug": "demo-stock-chaser",
+  "name": "Stock Chaser",
+  "description": "Watches velocity against cover and asks the buyer to reorder.",
+  "tier": "assisted",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

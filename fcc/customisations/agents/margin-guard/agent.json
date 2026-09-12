@@ -1,0 +1,20 @@
+{
+  "slug": "margin-guard",
+  "name": "Margin Guard",
+  "description": "Flag any repricing that would take a SKU below its floor margin.",
+  "tier": "domain",
+  "riskTier": "high",
+  "capabilities": [
+    "fcc_dynamic_pricing_view",
+    "fcc_pricing_optimizer_view"
+  ],
+  "triggers": [
+    "price.changed"
+  ],
+  "subscribedEvents": [
+    "price.changed"
+  ],
+  "purpose": "Flag any repricing that would take a SKU below its floor margin.",
+  "limitations": "Proposes; a human approves every write.",
+  "pinnedModel": null
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "demo-category-scout",
+  "name": "Category Scout",
+  "description": "Finds categories with demand the catalogue does not serve.",
+  "tier": "supervised",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

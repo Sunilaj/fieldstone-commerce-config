@@ -1,0 +1,19 @@
+{
+  "slug": "demo-refund-triage",
+  "name": "Refund Triage",
+  "description": "Decides which refund requests can be auto-approved.",
+  "tier": "assisted",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "late-delivery-triage",
+  "name": "Late Delivery Triage",
+  "description": "Open a ticket and notify the customer when a shipment misses its promise date.",
+  "tier": "domain",
+  "riskTier": "high",
+  "capabilities": [
+    "fcc_fulfillment_view",
+    "fcc_support_management_configure"
+  ],
+  "triggers": [
+    "shipment.status_changed"
+  ],
+  "subscribedEvents": [
+    "shipment.status_changed"
+  ],
+  "purpose": "Open a ticket and notify the customer when a shipment misses its promise date.",
+  "limitations": "Proposes; a human approves every write.",
+  "pinnedModel": null
+}

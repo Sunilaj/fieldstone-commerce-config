@@ -1,0 +1,19 @@
+{
+  "slug": "payment-failure-digest",
+  "name": "Payment Failure Digest",
+  "description": "Group the day's payment failures by gateway reason and report the pattern.",
+  "tier": "domain",
+  "riskTier": "medium",
+  "capabilities": [
+    "fcc_payments_view"
+  ],
+  "triggers": [
+    "payment.failed"
+  ],
+  "subscribedEvents": [
+    "payment.failed"
+  ],
+  "purpose": "Group the day's payment failures by gateway reason and report the pattern.",
+  "limitations": "Read-only. Reports what it found and changes nothing.",
+  "pinnedModel": null
+}

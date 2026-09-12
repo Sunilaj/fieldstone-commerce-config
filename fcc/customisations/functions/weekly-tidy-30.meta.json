@@ -1,0 +1,7 @@
+{
+  "name": "Weekly tidy 30",
+  "tier": "lowcode",
+  "trigger": "schedule",
+  "triggerKey": null,
+  "enabled": true
+}
