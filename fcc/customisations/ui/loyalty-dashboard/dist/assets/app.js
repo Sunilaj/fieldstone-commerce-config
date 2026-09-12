@@ -8,10 +8,16 @@
 (function () {
   "use strict";
 
+  /* The ladder our own service awards against.
+
+     These used to be Silver/Gold/Platinum at 5,000 and 20,000 — a ladder this
+     page invented, which nothing on the checkout agreed with. A shopper the
+     service called Gold read "Silver" here. One scheme, one set of names, and
+     the thresholds are the ones tierFor actually uses. */
   var TIERS = [
-    { key: "silver", name: "Silver", from: 0, blurb: "Free returns within 30 days on every order." },
-    { key: "gold", name: "Gold", from: 5000, blurb: "Free next-day delivery, and early access to sale events." },
-    { key: "platinum", name: "Platinum", from: 20000, blurb: "A dedicated line, and double points every weekend." }
+    { key: "Member", name: "Member", from: 0, blurb: "Free returns within 30 days on every order." },
+    { key: "Gold", name: "Gold", from: 1000, blurb: "5% off everything, and free Saturday delivery." },
+    { key: "Trade", name: "Trade", from: 4000, blurb: "10% off everything, and a dedicated line." }
   ];
 
   var params = new URLSearchParams(window.location.search);
@@ -70,13 +76,23 @@
   function render() {
     var app = document.getElementById("app");
     var current = balance ? balance.tier : null;
+    /* The next rung, and what it takes — the question anybody in a scheme
+       actually has. */
+    var next = null;
+    for (var t = 0; t < TIERS.length; t++) {
+      if (balance && TIERS[t].from > balance.points) { next = TIERS[t]; break; }
+    }
 
     var html =
       '<div class="wrap">' +
       "<h1>Fieldstone Rewards</h1>" +
       (balance && !balance.anonymous
         ? '<p class="balance"><strong>' + Number(balance.points).toLocaleString(locale) +
-          " points</strong> &middot; " + current + " member</p>"
+          " points</strong> &middot; " + current +
+          (next
+            ? ' &middot; ' + Number(next.from - balance.points).toLocaleString(locale) +
+              " more for " + next.name
+            : "") + "</p>"
         : '<p class="sub">Every order earns points. Points move you up the ladder, and the ladder never resets.</p>') +
       '<ul class="ladder">';
 
