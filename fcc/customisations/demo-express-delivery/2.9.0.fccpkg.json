@@ -1,0 +1,14 @@
+{
+  "manifest": {
+    "format": "fcc.customisation/v1",
+    "key": "demo-express-delivery",
+    "name": "Express delivery",
+    "description": "Express delivery — packaged customisation, installable into another marketplace.",
+    "version": "2.9.0",
+    "requiresApi": "v1",
+    "originTenant": "fieldstone-dev",
+    "exportedAt": "2026-09-12T01:39:04.512Z"
+  },
+  "elements": [],
+  "checksum": "fnv1a-811c9dc5-0"
+}
