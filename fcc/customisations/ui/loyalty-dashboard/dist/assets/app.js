@@ -42,14 +42,20 @@
     app.setAttribute("aria-busy", "false");
   }
 
-  /* The frame's height, asked for rather than assumed.
-     The platform caps whatever is sent — an app reporting 200,000 pixels has a
-     bug, and the page it sits in should not be 200,000 pixels tall while
+  /* Our height, which the platform caps — an app reporting 200,000 pixels has
+     a bug, and the page it sits in should not be 200,000 pixels tall while
      somebody fixes it. */
   function reportHeight() {
-    var h = document.documentElement.scrollHeight;
-    parent.postMessage({ type: "fcc:height", height: h }, "*");
+    parent.postMessage({ type: "fcc:height", height: document.documentElement.scrollHeight }, "*");
   }
+
+  /* Answering `fcc:measure` is the part that matters.
+     We load before the platform's slot does — that is deliberate on their side,
+     so their page is usable first — which means our announcement below is sent
+     into a page with nobody listening yet. They ask once they are ready. */
+  window.addEventListener("message", function (e) {
+    if (e.data && e.data.type === "fcc:measure") reportHeight();
+  });
 
   render();
   reportHeight();
