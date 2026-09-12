@@ -431,6 +431,99 @@ app.post("/order/enrich", async (c) => {
   });
 });
 
+/*
+  ── What a shopper SEES ─────────────────────────────────────────────────────
+
+  The hooks above decide what somebody is charged. These decide what they are
+  told about it, which until now we had no way to do at all: the platform could
+  take our discount and had nowhere to render the sentence explaining it.
+
+  We do not ship code into their pages and would not want to — it would put our
+  bugs inside somebody else's checkout. We answer with a short description and
+  the platform draws it in the shop's own theme. The vocabulary is small on
+  purpose; everything we can say in it is safe to say.
+*/
+
+/** Under the price on a product page. */
+app.post("/ui/product-panel", async (c) => {
+  const caller = await verifyPlatformCall(c.req.header("authorization"));
+  const token = c.req.header("authorization")?.replace(/^Bearer\s+/i, "").trim() ?? null;
+  if (!caller) return c.json({ error: "unverified" }, 401);
+
+  const { sku, shopperId } = await c.req.json().catch(() => ({})) as { sku?: string; shopperId?: string | null };
+  if (!sku) return c.json({ elements: [] });
+
+  const bonus = BONUS_CATEGORIES.some((p) => sku.startsWith(p));
+  const tier = shopperId ? await tierFor(token, caller.tenantId, shopperId) : null;
+
+  const elements: Array<Record<string, unknown>> = [
+    { type: "badge", label: bonus ? "Earns double points" : "Earns points", tone: bonus ? "warning" : "info" },
+  ];
+  if (tier) {
+    elements.push({
+      type: "text",
+      text: tier.discountPercent > 0
+        ? `${tier.name} members pay ${tier.discountPercent}% less on this.`
+        : `You are a ${tier.name}. Keep buying to reach Gold.`,
+    });
+  }
+  return c.json({ elements });
+});
+
+/** Beneath the basket summary. */
+app.post("/ui/cart-summary", async (c) => {
+  const caller = await verifyPlatformCall(c.req.header("authorization"));
+  const token = c.req.header("authorization")?.replace(/^Bearer\s+/i, "").trim() ?? null;
+  if (!caller) return c.json({ error: "unverified" }, 401);
+
+  const { shopperId } = await c.req.json().catch(() => ({})) as { shopperId?: string | null };
+  if (!shopperId) return c.json({ elements: [] });
+
+  const points = await balance(token, caller.tenantId, shopperId);
+  const toGold = Math.max(0, 1_000 - points);
+  return c.json({
+    elements: [
+      toGold > 0
+        ? { type: "text", text: `${points} points. ${toGold} more to reach Gold.`, tone: "info" }
+        : { type: "text", text: `${points} points — enough to take money off at checkout.`, tone: "success" },
+    ],
+  });
+});
+
+/**
+ * The shopper's own account page.
+ *
+ * The largest slot, and the only one where a shopper came deliberately to look
+ * at their standing — so this is where the ledger gets explained rather than
+ * summarised. "Why do I have 240 points" is the whole of loyalty support.
+ */
+app.post("/ui/account-panel", async (c) => {
+  const caller = await verifyPlatformCall(c.req.header("authorization"));
+  const token = c.req.header("authorization")?.replace(/^Bearer\s+/i, "").trim() ?? null;
+  if (!caller) return c.json({ error: "unverified" }, 401);
+
+  const { shopperId } = await c.req.json().catch(() => ({})) as { shopperId?: string | null };
+  if (!shopperId) return c.json({ elements: [] });
+
+  const points = await balance(token, caller.tenantId, shopperId);
+  const tier = await tierFor(token, caller.tenantId, shopperId);
+  const recent = (await history(token, caller.tenantId, shopperId)).slice(0, 5);
+
+  const elements: Array<Record<string, unknown>> = [
+    { type: "stat", label: "Points", value: points.toLocaleString("en-IN"), caption: tier?.name ?? "Not a member yet" },
+  ];
+  if (recent.length) {
+    elements.push({
+      type: "list",
+      items: recent.map((e) => `${e.points > 0 ? "+" : ""}${e.points} — ${e.reason}`),
+    });
+  }
+  if (tier && tier.discountPercent > 0) {
+    elements.push({ type: "notice", text: `${tier.name} members get ${tier.discountPercent}% off and free Saturday delivery.`, tone: "info" });
+  }
+  return c.json({ elements });
+});
+
 /** Fieldstone's own staff, looking a shopper up. Not called by the platform. */
 app.get("/points", async (c) => {
   const caller = await verifyPlatformCall(c.req.header("authorization"));

@@ -330,3 +330,99 @@ describe("enriching a paid order", () => {
     expect((await call("/order/enrich", { orderId: "x" })).status).toBe(401);
   });
 });
+
+/*
+  The UI slots. What a shopper is TOLD, beside the hooks that decide what they
+  are charged — and until these existed we could change somebody's total and had
+  no way to render the sentence explaining it.
+
+  We never send code or markup; the platform draws a short description in the
+  shop's own theme. So these cases are about whether we say the right thing to
+  the right person, not about how it looks.
+*/
+describe("what a shopper is told on a product page", () => {
+  it("says a product earns points, and calls out the ones that earn double", async () => {
+    const plain = await (await call("/ui/product-panel", { sku: "TOOL-1", shopperId: null })).json() as { elements: Array<{ label?: string }> };
+    expect(plain.elements[0].label).toMatch(/earns points/i);
+
+    const bonus = await (await call("/ui/product-panel", { sku: "GARD-9", shopperId: null })).json() as { elements: Array<{ label?: string }> };
+    expect(bonus.elements[0].label).toMatch(/double/i);
+  });
+
+  it("tells a member what THEY pay, and a guest nothing about tiers", async () => {
+    await earn(1_500);
+    const member = await (await call("/ui/product-panel", { sku: "TOOL-1", shopperId: "shopper-1" })).json() as { elements: Array<{ text?: string }> };
+    expect(member.elements.some((e) => /Gold members pay 5% less/.test(e.text ?? ""))).toBe(true);
+
+    const guest = await (await call("/ui/product-panel", { sku: "TOOL-1", shopperId: null })).json() as { elements: unknown[] };
+    expect(guest.elements.length).toBe(1);
+  });
+
+  it("says nothing at all when the platform names no product", async () => {
+    expect(await (await call("/ui/product-panel", { shopperId: "shopper-1" })).json()).toEqual({ elements: [] });
+  });
+
+  it("refuses an unsigned caller — this renders in somebody's shop under our name", async () => {
+    verifyMock.mockResolvedValue(null);
+    expect((await call("/ui/product-panel", { sku: "TOOL-1" })).status).toBe(401);
+  });
+});
+
+describe("what a shopper is told about their basket", () => {
+  it("says how far they are from the next tier", async () => {
+    await earn(400);
+    const body = await (await call("/ui/cart-summary", { shopperId: "shopper-1" })).json() as { elements: Array<{ text: string }> };
+    expect(body.elements[0].text).toMatch(/600 more to reach Gold/);
+  });
+
+  it("says something useful once they are past it, rather than a negative number", async () => {
+    await earn(1_500);
+    const body = await (await call("/ui/cart-summary", { shopperId: "shopper-1" })).json() as { elements: Array<{ text: string; tone: string }> };
+    expect(body.elements[0].text).not.toMatch(/-/);
+    expect(body.elements[0].tone).toBe("success");
+  });
+
+  it("says nothing to a guest, who has no standing to report", async () => {
+    expect(await (await call("/ui/cart-summary", { shopperId: null })).json()).toEqual({ elements: [] });
+  });
+});
+
+describe("what a shopper sees on their own account page", () => {
+  it("shows the balance, the tier, and the entries that explain it", async () => {
+    /*
+      "Why do I have 240 points" is the whole of loyalty support, and it is
+      answerable only because the ledger is append-only. A cached counter would
+      give the number and none of the reasons.
+    */
+    await earn(1_500);
+    const body = await (await call("/ui/account-panel", { shopperId: "shopper-1" })).json() as {
+      elements: Array<{ type: string; value?: string; caption?: string; items?: string[] }>;
+    };
+    const stat = body.elements.find((e) => e.type === "stat")!;
+    expect(stat.value).toMatch(/1,500/);
+    expect(stat.caption).toBe("Gold");
+    expect(body.elements.find((e) => e.type === "list")!.items!.length).toBeGreaterThan(0);
+  });
+
+  it("shows a shopper with no points that they are not a member yet", async () => {
+    const body = await (await call("/ui/account-panel", { shopperId: "nobody" })).json() as {
+      elements: Array<{ caption?: string }>;
+    };
+    expect(body.elements[0].caption).toMatch(/not a member/i);
+  });
+
+  it("never sends more entries than the slot will render", async () => {
+    // The platform caps this too. A service that relies on being corrected is
+    // wrong the day the correction moves.
+    for (let i = 0; i < 12; i++) await earn(10 + i, "busy-1");
+    const body = await (await call("/ui/account-panel", { shopperId: "busy-1" })).json() as {
+      elements: Array<{ type: string; items?: string[] }>;
+    };
+    expect(body.elements.find((e) => e.type === "list")!.items!.length).toBeLessThanOrEqual(5);
+  });
+
+  it("refuses an unsigned caller", async () => {
+    verifyMock.mockResolvedValue(null);
+    expect((await call("/ui/account-panel", { shopperId: "shopper-1" })).status).toBe(401);
+  });
+});
