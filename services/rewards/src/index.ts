@@ -30,8 +30,16 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 const app = new Hono();
 
-/** A point per rupee. Fieldstone's rule, and nobody else's. */
-const POINTS_PER_MAJOR_UNIT = 1;
+/*
+  Ten points per hundred rupees. Fieldstone's rule, and nobody else's.
+
+  It was one, which sounded generous and was not: a thousand points bought
+  Gold, so Gold began at a hundred thousand rupees of spending. Nobody reached
+  it. Every shopper we have ever had sat at Member with no discount, which
+  means the tiers — the whole of what makes this a loyalty scheme rather than a
+  coupon — have never once applied to anybody.
+*/
+const POINTS_PER_MAJOR_UNIT = 10;
 /** What a point is worth when spent, in minor units. 100 points = ₹100. */
 const MINOR_UNITS_PER_POINT = 100;
 /**
@@ -42,7 +50,7 @@ const MINOR_UNITS_PER_POINT = 100;
  * than the floor, so the offer we built has never once been shown at a
  * checkout. A scheme whose reward is unreachable is a scheme nobody is in.
  */
-const MIN_REDEEMABLE = 10;
+const MIN_REDEEMABLE = 100;
 
 /**
  * SKU prefixes Fieldstone gives double points on.
@@ -61,7 +69,14 @@ const BONUS_CATEGORIES = ["GARD", "PAV", "OUT"];
  */
 async function tierFor(token: string | null, tenantId: string, shopperId: string): Promise<{ name: string; discountPercent: number } | null> {
   const points = await balance(token, tenantId, shopperId);
-  if (points >= 5_000) return { name: "Trade", discountPercent: 10 };
+  /*
+    Thresholds a customer reaches inside a year, not a decade.
+
+    At ten points per hundred rupees these are roughly ten thousand and forty
+    thousand rupees of spending — a regular customer and a trade buyer, which
+    is what the two names were always supposed to mean.
+  */
+  if (points >= 4_000) return { name: "Trade", discountPercent: 10 };
   if (points >= 1_000) return { name: "Gold", discountPercent: 5 };
   if (points > 0) return { name: "Member", discountPercent: 0 };
   return null;
