@@ -118,7 +118,10 @@ app.post("/hooks/fcc", async (c) => {
        not recognise. */
     event?: string;
     type?: string;
-    data?: { orderId?: string; customerId?: string; totalMinor?: number };
+    /* `totalAmount` is the platform's name for it. We read `totalMinor`,
+       which it does not send, so every order arrived looking as though it had
+       no total and was refused 400. */
+    data?: { orderId?: string; customerId?: string; totalAmount?: number; totalMinor?: number };
   };
   const kind = body.event ?? body.type ?? "";
 
@@ -141,7 +144,8 @@ app.post("/hooks/fcc", async (c) => {
   const EARNING_EVENTS = ["order.created", "order.placed"];
   if (!EARNING_EVENTS.includes(kind)) return c.json({ ignored: kind || null });
 
-  const { orderId, customerId, totalMinor } = body.data ?? {};
+  const { orderId, customerId } = body.data ?? {};
+  const totalMinor = body.data?.totalAmount ?? body.data?.totalMinor;
   if (!orderId || !customerId || !Number.isFinite(totalMinor)) {
     return c.json({ error: `${kind} without an order, a customer or a total` }, 400);
   }
