@@ -1,0 +1,18 @@
+{
+  "name": "Fieldstone Rewards",
+  "description": "Fieldstone's own loyalty scheme. Points earned on paid orders, redeemed at checkout. Built by Fieldstone on the platform APIs.",
+  "publisherId": "cmtn1bfi700top08o7sl12jjs",
+  "acceptedVersion": "1.4.0",
+  "apiUrl": "http://localhost:4500",
+  "ownAddress": "http://localhost:4500",
+  "webhookUrl": "http://localhost:4500/hooks/fcc",
+  "contributes": [
+    "checkout"
+  ],
+  "webhooks": [
+    "order.placed"
+  ],
+  "scopes": [
+    "order-management:view"
+  ]
+}
