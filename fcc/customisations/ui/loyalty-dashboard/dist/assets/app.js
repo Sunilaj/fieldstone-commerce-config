@@ -18,21 +18,61 @@
   var shop = params.get("tenantSlug") || "Fieldstone";
   var locale = params.get("locale") || "en";
 
+  /* The credential the platform hands us, once, by postMessage.
+     Never in the URL — a URL turns up in a referrer, a history and a
+     screenshot. We hold it in a closure and send it with our own calls. */
+  var credential = null;
+  var balance = null;
+
+  /* Our own function, running in their sandbox, reading our own ledger.
+     We declared it in fcc.json when we built; asking for anything else is
+     refused, which is the point. */
+  function loadBalance() {
+    if (!credential) return;
+    fetch("/__fcc/call/points-balance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + credential },
+      body: "{}"
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) { if (data) { balance = data; render(); } })
+      .catch(function () { /* The ladder still renders. A balance we cannot
+                              fetch is a quieter screen, not a broken one. */ });
+  }
+
   function render() {
     var app = document.getElementById("app");
+    var current = balance ? balance.tier : null;
+
     var html =
       '<div class="wrap">' +
       "<h1>Fieldstone Rewards</h1>" +
-      '<p class="sub">Every order earns points. Points move you up the ladder, and the ladder never resets.</p>' +
+      (balance && !balance.anonymous
+        ? '<p class="balance"><strong>' + Number(balance.points).toLocaleString(locale) +
+          " points</strong> &middot; " + current + " member</p>"
+        : '<p class="sub">Every order earns points. Points move you up the ladder, and the ladder never resets.</p>') +
       '<ul class="ladder">';
 
     TIERS.forEach(function (t) {
+      /* The tier we are actually on, when we know it. Before the balance
+         arrives nothing is highlighted — a guess would be wrong for most
+         people looking at it. */
       html +=
-        '<li class="tier' + (t.key === "silver" ? " is-current" : "") + '">' +
+        '<li class="tier' + (t.key === current ? " is-current" : "") + '">' +
         '<span class="badge">' + t.name + "</span>" +
         "<div><h2>" + t.from.toLocaleString(locale) + " points</h2>" +
         "<p>" + t.blurb + "</p></div></li>";
     });
+
+    if (balance && balance.entries && balance.entries.length) {
+      html += '<h3 class="recent">Recent</h3><ul class="entries">';
+      balance.entries.forEach(function (e) {
+        html +=
+          "<li><span>" + (e.reason || "Points") + "</span>" +
+          '<span class="pts">' + (e.points > 0 ? "+" : "") + e.points + "</span></li>";
+      });
+      html += "</ul>";
+    }
 
     html +=
       "</ul>" +
@@ -40,6 +80,7 @@
       "</div>";
     app.innerHTML = html;
     app.setAttribute("aria-busy", "false");
+    reportHeight();
   }
 
   /* Our height, which the platform caps — an app reporting 200,000 pixels has
@@ -54,7 +95,12 @@
      so their page is usable first — which means our announcement below is sent
      into a page with nobody listening yet. They ask once they are ready. */
   window.addEventListener("message", function (e) {
-    if (e.data && e.data.type === "fcc:measure") reportHeight();
+    if (!e.data) return;
+    if (e.data.type === "fcc:measure") reportHeight();
+    if (e.data.type === "fcc:credential" && !credential) {
+      credential = e.data.token;
+      loadBalance();
+    }
   });
 
   render();
