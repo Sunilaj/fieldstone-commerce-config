@@ -172,6 +172,15 @@ app.post("/hooks/fcc", async (c) => {
     return c.json({ error: `${kind} without an order, a customer or a total` }, 400);
   }
 
+  /*
+    Skipped when our ledger is the platform's storage: that store is opened with
+    the token the platform sends on a HOOK, and a webhook arrives signed and
+    without one. `order.enrich` does the awarding in that deployment.
+  */
+  if (process.env.REWARDS_STORAGE_URL) {
+    return c.json({ ignored: "platform storage is awarded on order.enrich" });
+  }
+
   const ref = `order:${orderId}`;
   const points = Math.floor((totalMinor! / 100) * POINTS_PER_MAJOR_UNIT);
   if (points <= 0) return c.json({ ok: true, points: 0 });
@@ -487,19 +496,58 @@ app.post("/order/enrich", async (c) => {
   const token = c.req.header("authorization")?.replace(/^Bearer\s+/i, "").trim() ?? null;
   if (!caller) return c.json({ error: "unverified" }, 401);
 
-  const { shopperId, totalMinor } = await c.req.json().catch(() => ({})) as {
-    shopperId?: string | null; totalMinor?: number;
+  const { orderId, shopperId, totalMinor } = await c.req.json().catch(() => ({})) as {
+    orderId?: string; shopperId?: string | null; totalMinor?: number;
   };
   if (!shopperId) return c.json({ attributes: {} });
 
   const tier = await tierFor(token, caller.tenantId, shopperId);
   const earning = Math.floor((Number(totalMinor) || 0) / 100 * POINTS_PER_MAJOR_UNIT);
+
+  /*
+    This AWARDS the points, and for a long time it only described them.
+
+    It computed `pointsEarned`, wrote it on the order, and recorded nothing —
+    the award lived on our webhook. That was survivable while our ledger was
+    our own Postgres, and it is not survivable at all with the platform's
+    storage: that store is opened with the token the platform sends on a HOOK,
+    and a webhook arrives signed and carrying none. So the order attributes
+    said a shopper had earned points and the balance never moved.
+
+    Idempotent on the order and decided by the WRITE, so this and the webhook
+    can both be live in a deployment that has both and award exactly once.
+
+    Nothing here may fail a purchase: this runs after the money moved, and a
+    ledger that is briefly unreachable must cost a point, not a sale.
+  */
+  let awarded = false;
+  if (orderId && earning > 0) {
+    try {
+      awarded = await record(token, {
+        tenantId: caller.tenantId,
+        shopperId,
+        points: earning,
+        reason: "Order paid",
+        ref: `order:${orderId}`,
+      });
+    } catch {
+      awarded = false;
+    }
+  }
+
   return c.json({
     attributes: {
       loyaltyScheme: "Fieldstone Rewards",
       memberTier: tier?.name ?? "Guest",
       pointsEarned: String(earning),
-      balanceAfter: String(await balance(token, caller.tenantId, shopperId) + earning),
+      /*
+        What they have AFTER this order, read once the award has landed rather
+        than guessed by adding to a stale figure — the two disagree the moment
+        anything else has touched the balance.
+      */
+      balanceAfter: String(
+        awarded ? await balance(token, caller.tenantId, shopperId) : (await balance(token, caller.tenantId, shopperId)) + earning,
+      ),
     },
   });
 });
