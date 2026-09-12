@@ -26,6 +26,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { balance, history, ledger, record, spent } from "./points.js";
 import { verifyPlatformCall } from "./platform.js";
+import { createHmac, timingSafeEqual } from "node:crypto";
 
 const app = new Hono();
 
@@ -83,15 +84,49 @@ app.get("/health", async (c) => {
  * scheme that awarded points twice for one delivery attempt would be a scheme
  * its own customers could farm.
  */
-app.post("/hooks/fcc", async (c) => {
-  const caller = await verifyPlatformCall(c.req.header("authorization"));
-  const token = c.req.header("authorization")?.replace(/^Bearer\s+/i, "").trim() ?? null;
-  if (!caller) return c.json({ error: "unverified" }, 401);
+/**
+ * Whether a webhook really came from the platform.
+ *
+ * A webhook is SIGNED, not bearer-authenticated. This route asked for an
+ * `Authorization` header the platform has never sent — it sends
+ * `X-FCC-Signature: sha256=<hmac of the body, with our endpoint secret>` — so
+ * every delivery we have ever been sent was answered 401 and every retry after
+ * it. The deliveries are in their log as failures; no points were ever awarded.
+ *
+ * Compared in constant time. A signature check that returns on the first wrong
+ * byte can be guessed one byte at a time.
+ */
+function signedByPlatform(raw: string, header: string | undefined): boolean {
+  const secret = process.env.FCC_WEBHOOK_SECRET;
+  if (!secret || !header) return false;
+  const expected = `sha256=${createHmac("sha256", secret).update(raw, "utf8").digest("hex")}`;
+  const a = Buffer.from(expected, "utf8");
+  const b = Buffer.from(header, "utf8");
+  return a.length === b.length && timingSafeEqual(a, b);
+}
 
-  const body = await c.req.json().catch(() => ({})) as {
+app.post("/hooks/fcc", async (c) => {
+  const raw = await c.req.text();
+  if (!signedByPlatform(raw, c.req.header("x-fcc-signature"))) {
+    return c.json({ error: "unsigned" }, 401);
+  }
+  const token = null;
+
+  const body = JSON.parse(raw || "{}") as {
+    /* The platform's field is `event`. We read `type` for years, which is not
+       a field it has ever sent, so every payload looked like an event we did
+       not recognise. */
+    event?: string;
     type?: string;
     data?: { orderId?: string; customerId?: string; totalMinor?: number };
   };
+  const kind = body.event ?? body.type ?? "";
+
+  /* Our tenant, from our own deployment.
+     A webhook payload carries no tenant — correctly, since this endpoint was
+     registered by one shop and receives only that shop's events. */
+  const tenantId = process.env.FCC_TENANT_ID;
+  if (!tenantId) return c.json({ error: "FCC_TENANT_ID is not set on this deployment" }, 500);
   /*
     `order.created` is what the platform actually emits.
 
@@ -104,11 +139,11 @@ app.post("/hooks/fcc", async (c) => {
     name is the platform's to choose, not ours to be brittle about.
   */
   const EARNING_EVENTS = ["order.created", "order.placed"];
-  if (!EARNING_EVENTS.includes(body.type ?? "")) return c.json({ ignored: body.type ?? null });
+  if (!EARNING_EVENTS.includes(kind)) return c.json({ ignored: kind || null });
 
   const { orderId, customerId, totalMinor } = body.data ?? {};
   if (!orderId || !customerId || !Number.isFinite(totalMinor)) {
-    return c.json({ error: `${body.type} without an order, a customer or a total` }, 400);
+    return c.json({ error: `${kind} without an order, a customer or a total` }, 400);
   }
 
   const ref = `order:${orderId}`;
@@ -124,7 +159,7 @@ app.post("/hooks/fcc", async (c) => {
     second write lose, and losing is reported as a duplicate rather than an error
     because a retry of something already honoured is a success.
   */
-  const written = await record(token, { tenantId: caller.tenantId, shopperId: customerId, points, reason: "Order paid", ref });
+  const written = await record(token, { tenantId, shopperId: customerId, points, reason: "Order paid", ref });
   if (!written.written) return c.json({ ok: true, duplicate: true });
   return c.json({ ok: true, points });
 });
