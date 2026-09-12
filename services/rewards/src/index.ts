@@ -92,11 +92,23 @@ app.post("/hooks/fcc", async (c) => {
     type?: string;
     data?: { orderId?: string; customerId?: string; totalMinor?: number };
   };
-  if (body.type !== "order.placed") return c.json({ ignored: body.type ?? null });
+  /*
+    `order.created` is what the platform actually emits.
+
+    This listened for `order.placed`, which reads better and does not exist —
+    so every order we have ever been sent was answered `{ ignored }` and nobody
+    has earned a point since we shipped. Nothing failed: the delivery
+    succeeded, we returned 200, and the balance stayed at zero.
+
+    `order.placed` is still accepted, because it costs one line and an event
+    name is the platform's to choose, not ours to be brittle about.
+  */
+  const EARNING_EVENTS = ["order.created", "order.placed"];
+  if (!EARNING_EVENTS.includes(body.type ?? "")) return c.json({ ignored: body.type ?? null });
 
   const { orderId, customerId, totalMinor } = body.data ?? {};
   if (!orderId || !customerId || !Number.isFinite(totalMinor)) {
-    return c.json({ error: "order.placed without an order, a customer or a total" }, 400);
+    return c.json({ error: `${body.type} without an order, a customer or a total` }, 400);
   }
 
   const ref = `order:${orderId}`;
