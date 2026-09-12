@@ -34,11 +34,38 @@
       headers: { "Content-Type": "application/json", Authorization: "Bearer " + credential },
       body: "{}"
     })
-      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (r) {
+        /* 401 is the credential, not us. Renew and try once more — a
+           dashboard is the kind of page somebody leaves open, and ours was
+           going quiet after fifteen minutes with nothing on screen saying so. */
+        if (r.status === 401) return renew().then(function (ok) { return ok ? loadBalance() : null; });
+        return r.ok ? r.json() : null;
+      })
       .then(function (data) { if (data) { balance = data; render(); } })
       .catch(function () { /* The ladder still renders. A balance we cannot
                               fetch is a quieter screen, not a broken one. */ });
   }
+
+  /* A fresh credential from the one we hold. The platform bounds how long this
+     can go on; when it says reload, we reload rather than sitting there. */
+  function renew() {
+    return fetch("/__fcc/renew", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + credential }
+    })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (body) {
+        if (body && body.token) { credential = body.token; return true; }
+        location.reload();
+        return false;
+      })
+      .catch(function () { return false; });
+  }
+
+  /* Ahead of expiry rather than after it. The credential lasts fifteen
+     minutes; renewing at twelve means a shopper reading the page never sees a
+     gap, and never finds out this mechanism exists. */
+  setInterval(function () { if (credential) renew(); }, 12 * 60 * 1000);
 
   function render() {
     var app = document.getElementById("app");
