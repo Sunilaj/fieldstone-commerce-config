@@ -34,8 +34,15 @@ const app = new Hono();
 const POINTS_PER_MAJOR_UNIT = 1;
 /** What a point is worth when spent, in minor units. 100 points = ₹100. */
 const MINOR_UNITS_PER_POINT = 100;
-/** The smallest redemption worth offering. */
-const MIN_REDEEMABLE = 100;
+/**
+ * The smallest redemption worth offering.
+ *
+ * Was a hundred points — a hundred rupees off, after ten thousand rupees of
+ * spending. Nobody reached it: every shopper who earned anything earned less
+ * than the floor, so the offer we built has never once been shown at a
+ * checkout. A scheme whose reward is unreachable is a scheme nobody is in.
+ */
+const MIN_REDEEMABLE = 10;
 
 /**
  * SKU prefixes Fieldstone gives double points on.
