@@ -31,15 +31,17 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 const app = new Hono();
 
 /*
-  Ten points per hundred rupees. Fieldstone's rule, and nobody else's.
+  A point per ten rupees spent, and a point is worth a rupee when spent. Ten
+  per cent back, which is a scheme somebody can describe in a sentence.
 
-  It was one, which sounded generous and was not: a thousand points bought
-  Gold, so Gold began at a hundred thousand rupees of spending. Nobody reached
-  it. Every shopper we have ever had sat at Member with no discount, which
-  means the tiers — the whole of what makes this a loyalty scheme rather than a
-  coupon — have never once applied to anybody.
+  The number used to be "points per major unit" and the two places that awarded
+  them disagreed about what a major unit was: our webhook is sent `totalAmount`
+  in RUPEES and the `order.enrich` hook is sent `totalMinor` in PAISE, and the
+  same formula ran over both. One order paid ten points down one path and
+  eleven thousand down the other. Naming the unit in the constant is what stops
+  that being a matter of opinion.
 */
-const POINTS_PER_MAJOR_UNIT = 10;
+const MINOR_UNITS_PER_POINT_EARNED = 1_000;
 /** What a point is worth when spent, in minor units. 100 points = ₹100. */
 const MINOR_UNITS_PER_POINT = 100;
 /**
@@ -76,8 +78,12 @@ async function tierFor(token: string | null, tenantId: string, shopperId: string
     thousand rupees of spending — a regular customer and a trade buyer, which
     is what the two names were always supposed to mean.
   */
-  if (points >= 4_000) return { name: "Trade", discountPercent: 10 };
-  if (points >= 1_000) return { name: "Gold", discountPercent: 5 };
+  /*
+    Roughly five and twenty thousand rupees of spending — a regular customer
+    and a trade buyer, which is what the two names were always meant to say.
+  */
+  if (points >= 2_000) return { name: "Trade", discountPercent: 10 };
+  if (points >= 500) return { name: "Gold", discountPercent: 5 };
   if (points > 0) return { name: "Member", discountPercent: 0 };
   return null;
 }
@@ -182,7 +188,7 @@ app.post("/hooks/fcc", async (c) => {
   }
 
   const ref = `order:${orderId}`;
-  const points = Math.floor((totalMinor! / 100) * POINTS_PER_MAJOR_UNIT);
+  const points = Math.floor((totalMinor! * 100) / MINOR_UNITS_PER_POINT_EARNED);
   if (points <= 0) return c.json({ ok: true, points: 0 });
 
   /*
@@ -502,7 +508,7 @@ app.post("/order/enrich", async (c) => {
   if (!shopperId) return c.json({ attributes: {} });
 
   const tier = await tierFor(token, caller.tenantId, shopperId);
-  const earning = Math.floor((Number(totalMinor) || 0) / 100 * POINTS_PER_MAJOR_UNIT);
+  const earning = Math.floor((Number(totalMinor) || 0) / MINOR_UNITS_PER_POINT_EARNED);
 
   /*
     This AWARDS the points, and for a long time it only described them.
