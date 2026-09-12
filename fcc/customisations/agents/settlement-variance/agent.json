@@ -1,0 +1,20 @@
+{
+  "slug": "settlement-variance",
+  "name": "Settlement Variance",
+  "description": "Explain why a seller's payout differs from the previous cycle.",
+  "tier": "domain",
+  "riskTier": "high",
+  "capabilities": [
+    "fcc_settlements_view",
+    "fcc_order_management_view"
+  ],
+  "triggers": [
+    "settlement.batch_processed"
+  ],
+  "subscribedEvents": [
+    "settlement.batch_processed"
+  ],
+  "purpose": "Explain why a seller's payout differs from the previous cycle.",
+  "limitations": "Proposes; a human approves every write.",
+  "pinnedModel": null
+}

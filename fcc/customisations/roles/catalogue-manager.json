@@ -1,0 +1,5 @@
+{
+  "name": "Catalogue Manager",
+  "description": "Adds and edits products, cannot see orders or payouts.",
+  "permissions": []
+}

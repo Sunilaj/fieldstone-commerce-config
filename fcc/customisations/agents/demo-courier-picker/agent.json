@@ -1,0 +1,19 @@
+{
+  "slug": "demo-courier-picker",
+  "name": "Courier Picker",
+  "description": "Chooses a courier per shipment on cost and reliability.",
+  "tier": "supervised",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "demo-fraud-explainer",
+  "name": "Fraud Explainer",
+  "description": "Says in plain words why an order was held.",
+  "tier": "assisted",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

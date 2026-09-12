@@ -1,0 +1,5 @@
+{
+  "name": "Seller Ops",
+  "description": "Onboards and suspends sellers; cannot touch their pricing.",
+  "permissions": []
+}

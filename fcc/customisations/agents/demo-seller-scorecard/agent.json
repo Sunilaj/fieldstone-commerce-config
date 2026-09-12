@@ -1,0 +1,19 @@
+{
+  "slug": "demo-seller-scorecard",
+  "name": "Seller Scorecard",
+  "description": "Builds the weekly seller performance summary.",
+  "tier": "supervised",
+  "riskTier": "medium",
+  "capabilities": [
+    "read",
+    "propose"
+  ],
+  "triggers": [
+    "manual",
+    "schedule"
+  ],
+  "subscribedEvents": [],
+  "purpose": null,
+  "limitations": null,
+  "pinnedModel": null
+}

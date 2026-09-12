@@ -1,0 +1,19 @@
+{
+  "slug": "review-tone-watch",
+  "name": "Review Tone Watch",
+  "description": "Summarise the week's reviews and surface the recurring complaint.",
+  "tier": "domain",
+  "riskTier": "low",
+  "capabilities": [
+    "fcc_ratings_reviews_view"
+  ],
+  "triggers": [
+    "review.submitted"
+  ],
+  "subscribedEvents": [
+    "review.submitted"
+  ],
+  "purpose": "Summarise the week's reviews and surface the recurring complaint.",
+  "limitations": "Read-only. Reports what it found and changes nothing.",
+  "pinnedModel": null
+}

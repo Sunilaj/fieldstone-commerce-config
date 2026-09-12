@@ -1,0 +1,7 @@
+{
+  "name": "Auto-approve clean reviews 23",
+  "tier": "lowcode",
+  "trigger": "webhook_event",
+  "triggerKey": "review.submitted",
+  "enabled": true
+}

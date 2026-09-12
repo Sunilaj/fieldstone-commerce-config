@@ -1,0 +1,5 @@
+{
+  "name": "Finance",
+  "description": "Settlements, invoices and payouts. Read-only on commerce.",
+  "permissions": []
+}

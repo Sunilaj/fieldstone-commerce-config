@@ -1,0 +1,7 @@
+{
+  "name": "Low stock ticket 10",
+  "tier": "nocode",
+  "trigger": "webhook_event",
+  "triggerKey": "stock.movement",
+  "enabled": false
+}

@@ -1,0 +1,7 @@
+{
+  "name": "Delayed order ticket 20",
+  "tier": "nocode",
+  "trigger": "webhook_event",
+  "triggerKey": "order.status_changed",
+  "enabled": true
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Read-only Auditor",
+  "description": "Sees everything, changes nothing.",
+  "permissions": []
+}
