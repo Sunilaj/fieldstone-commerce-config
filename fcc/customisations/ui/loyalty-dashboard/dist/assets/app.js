@@ -16,8 +16,8 @@
      the thresholds are the ones tierFor actually uses. */
   var TIERS = [
     { key: "Member", name: "Member", from: 0, blurb: "Free returns within 30 days on every order." },
-    { key: "Gold", name: "Gold", from: 1000, blurb: "5% off everything, and free Saturday delivery." },
-    { key: "Trade", name: "Trade", from: 4000, blurb: "10% off everything, and a dedicated line." }
+    { key: "Gold", name: "Gold", from: 500, blurb: "5% off everything, and free Saturday delivery." },
+    { key: "Trade", name: "Trade", from: 2000, blurb: "10% off everything, and a dedicated line." }
   ];
 
   var params = new URLSearchParams(window.location.search);
