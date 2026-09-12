@@ -1,0 +1,14 @@
+{
+  "manifest": {
+    "format": "fcc.customisation/v1",
+    "key": "demo-gst-invoicing",
+    "name": "GST invoicing",
+    "description": "GST invoicing — packaged customisation, installable into another marketplace.",
+    "version": "1.3.0",
+    "requiresApi": "v1",
+    "originTenant": "fieldstone-dev",
+    "exportedAt": "2026-09-12T02:18:27.952Z"
+  },
+  "elements": [],
+  "checksum": "fnv1a-811c9dc5-0"
+}
