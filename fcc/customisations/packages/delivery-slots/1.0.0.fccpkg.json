@@ -6,9 +6,509 @@
     "version": "1.0.0",
     "requiresApi": "v1",
     "originTenant": "fieldstone-dev",
-    "exportedAt": "2026-09-12T12:08:48.897Z"
+    "exportedAt": "2026-09-12T13:01:25.889Z"
   },
   "elements": [
+    {
+      "kind": "custom-function",
+      "refKey": "Manual reconcile 28",
+      "payload": {
+        "name": "Manual reconcile 28",
+        "tier": "nocode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "return { note: \"reconciled\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 12",
+      "payload": {
+        "name": "Weekly tidy 12",
+        "tier": "lowcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 13",
+      "payload": {
+        "name": "Weekly tidy 13",
+        "tier": "nocode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 15",
+      "payload": {
+        "name": "Weekly tidy 15",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 16",
+      "payload": {
+        "name": "Weekly tidy 16",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 17",
+      "payload": {
+        "name": "Weekly tidy 17",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 29",
+      "payload": {
+        "name": "Weekly tidy 29",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 30",
+      "payload": {
+        "name": "Weekly tidy 30",
+        "tier": "lowcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 4",
+      "payload": {
+        "name": "Weekly tidy 4",
+        "tier": "nocode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 5",
+      "payload": {
+        "name": "Weekly tidy 5",
+        "tier": "nocode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 7",
+      "payload": {
+        "name": "Weekly tidy 7",
+        "tier": "fullcode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-26-agentic-os",
+      "payload": {
+        "enabled": true,
+        "variant": "B"
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-28-i18n",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-30-perf-tests",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-33-insights",
+      "payload": {
+        "enabled": true,
+        "variant": "B"
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-34-event-fabric",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-44-ucp",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-46-soft-delete",
+      "payload": {
+        "enabled": true,
+        "variant": "A"
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-47-tenant-continuity",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-53-customisation-packages",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "seller-portal",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-campaign-critic",
+      "payload": {
+        "name": "Campaign Critic",
+        "description": "Reviews campaign spend against return and says what to cut.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Campaign Critic. Reviews campaign spend against return and says what to cut. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-cart-rescuer",
+      "payload": {
+        "name": "Cart Rescuer",
+        "description": "Spots abandoned carts worth a nudge and drafts it.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Cart Rescuer. Spots abandoned carts worth a nudge and drafts it. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-category-scout",
+      "payload": {
+        "name": "Category Scout",
+        "description": "Finds categories with demand the catalogue does not serve.",
+        "tier": "supervised",
+        "riskTier": "medium",
+        "systemPrompt": "You are Category Scout. Finds categories with demand the catalogue does not serve. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-courier-picker",
+      "payload": {
+        "name": "Courier Picker",
+        "description": "Chooses a courier per shipment on cost and reliability.",
+        "tier": "supervised",
+        "riskTier": "medium",
+        "systemPrompt": "You are Courier Picker. Chooses a courier per shipment on cost and reliability. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "festive-stock-watch",
+      "payload": {
+        "name": "Festive Stock Watch",
+        "description": "Warn when a festive-season line is going to sell out before the campaign ends.",
+        "tier": "domain",
+        "riskTier": "medium",
+        "systemPrompt": "You are Festive Stock Watch for this merchant. Warn when a festive-season line is going to sell out before the campaign ends. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_warehouse_management_view",
+          "fcc_catalog_management_view"
+        ],
+        "triggers": [
+          "stock.movement",
+          "product.status_changed"
+        ],
+        "subscribedEvents": [
+          "stock.movement",
+          "product.status_changed"
+        ],
+        "evalCases": [],
+        "purpose": "Warn when a festive-season line is going to sell out before the campaign ends.",
+        "limitations": "Read-only. Reports what it found and changes nothing.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-fraud-explainer",
+      "payload": {
+        "name": "Fraud Explainer",
+        "description": "Says in plain words why an order was held.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Fraud Explainer. Says in plain words why an order was held. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "late-delivery-triage",
+      "payload": {
+        "name": "Late Delivery Triage",
+        "description": "Open a ticket and notify the customer when a shipment misses its promise date.",
+        "tier": "domain",
+        "riskTier": "high",
+        "systemPrompt": "You are Late Delivery Triage for this merchant. Open a ticket and notify the customer when a shipment misses its promise date. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_fulfillment_view",
+          "fcc_support_management_configure"
+        ],
+        "triggers": [
+          "shipment.status_changed"
+        ],
+        "subscribedEvents": [
+          "shipment.status_changed"
+        ],
+        "evalCases": [],
+        "purpose": "Open a ticket and notify the customer when a shipment misses its promise date.",
+        "limitations": "Proposes; a human approves every write.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-listing-doctor",
+      "payload": {
+        "name": "Listing Doctor",
+        "description": "Rewrites thin titles and flags missing attributes.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Listing Doctor. Rewrites thin titles and flags missing attributes. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Data Analyst",
+      "payload": {
+        "description": "Insights and dashboards; no write path into commerce.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "role",
+      "refKey": "Finance",
+      "payload": {
+        "description": "Settlements, invoices and payouts. Read-only on commerce.",
+        "permissions": []
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Weekly tidy 8",
+      "payload": {
+        "name": "Weekly tidy 8",
+        "tier": "nocode",
+        "trigger": "schedule",
+        "triggerKey": null,
+        "code": "return { note: \"nothing to do\" };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-14-audit-log",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-15-enterprise-sso",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-17-webhooks",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-18-feature-flags",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-20-studio",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-21-notifications",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-23-app-of-apps",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-24-admin-chat",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
     {
       "kind": "branding",
       "refKey": "default",
@@ -234,291 +734,294 @@
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Manual reconcile 28",
+      "kind": "agent",
+      "refKey": "margin-guard",
       "payload": {
-        "name": "Manual reconcile 28",
-        "tier": "nocode",
-        "trigger": "manual",
-        "triggerKey": null,
-        "code": "return { note: \"reconciled\" };",
-        "enabled": true
+        "name": "Margin Guard",
+        "description": "Flag any repricing that would take a SKU below its floor margin.",
+        "tier": "domain",
+        "riskTier": "high",
+        "systemPrompt": "You are Margin Guard for this merchant. Flag any repricing that would take a SKU below its floor margin. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_dynamic_pricing_view",
+          "fcc_pricing_optimizer_view"
+        ],
+        "triggers": [
+          "price.changed"
+        ],
+        "subscribedEvents": [
+          "price.changed"
+        ],
+        "evalCases": [],
+        "purpose": "Flag any repricing that would take a SKU below its floor margin.",
+        "limitations": "Proposes; a human approves every write.",
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 12",
+      "kind": "agent",
+      "refKey": "demo-margin-watch",
       "payload": {
-        "name": "Weekly tidy 12",
-        "tier": "lowcode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": false
+        "name": "Margin Watch",
+        "description": "Alerts when a promotion would sell below the floor.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Margin Watch. Alerts when a promotion would sell below the floor. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 13",
+      "kind": "agent",
+      "refKey": "payment-failure-digest",
       "payload": {
-        "name": "Weekly tidy 13",
-        "tier": "nocode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Payment Failure Digest",
+        "description": "Group the day's payment failures by gateway reason and report the pattern.",
+        "tier": "domain",
+        "riskTier": "medium",
+        "systemPrompt": "You are Payment Failure Digest for this merchant. Group the day's payment failures by gateway reason and report the pattern. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_payments_view"
+        ],
+        "triggers": [
+          "payment.failed"
+        ],
+        "subscribedEvents": [
+          "payment.failed"
+        ],
+        "evalCases": [],
+        "purpose": "Group the day's payment failures by gateway reason and report the pattern.",
+        "limitations": "Read-only. Reports what it found and changes nothing.",
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 15",
+      "kind": "agent",
+      "refKey": "demo-payout-reconciler",
       "payload": {
-        "name": "Weekly tidy 15",
-        "tier": "fullcode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Payout Reconciler",
+        "description": "Matches settlement to gateway and reports the gap.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Payout Reconciler. Matches settlement to gateway and reports the gap. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 16",
+      "kind": "agent",
+      "refKey": "demo-refund-triage",
       "payload": {
-        "name": "Weekly tidy 16",
-        "tier": "fullcode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Refund Triage",
+        "description": "Decides which refund requests can be auto-approved.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Refund Triage. Decides which refund requests can be auto-approved. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 17",
+      "kind": "agent",
+      "refKey": "review-tone-watch",
       "payload": {
-        "name": "Weekly tidy 17",
-        "tier": "fullcode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Review Tone Watch",
+        "description": "Summarise the week's reviews and surface the recurring complaint.",
+        "tier": "domain",
+        "riskTier": "low",
+        "systemPrompt": "You are Review Tone Watch for this merchant. Summarise the week's reviews and surface the recurring complaint. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_ratings_reviews_view"
+        ],
+        "triggers": [
+          "review.submitted"
+        ],
+        "subscribedEvents": [
+          "review.submitted"
+        ],
+        "evalCases": [],
+        "purpose": "Summarise the week's reviews and surface the recurring complaint.",
+        "limitations": "Read-only. Reports what it found and changes nothing.",
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 29",
+      "kind": "agent",
+      "refKey": "search-miss-report",
       "payload": {
-        "name": "Weekly tidy 29",
-        "tier": "fullcode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Search Miss Report",
+        "description": "Report searches that returned nothing, so the catalogue team can act.",
+        "tier": "domain",
+        "riskTier": "low",
+        "systemPrompt": "You are Search Miss Report for this merchant. Report searches that returned nothing, so the catalogue team can act. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_smart_search_view",
+          "fcc_catalog_management_view"
+        ],
+        "triggers": [
+          "search.performed"
+        ],
+        "subscribedEvents": [
+          "search.performed"
+        ],
+        "evalCases": [],
+        "purpose": "Report searches that returned nothing, so the catalogue team can act.",
+        "limitations": "Read-only. Reports what it found and changes nothing.",
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 30",
+      "kind": "agent",
+      "refKey": "seller-onboarding-nudge",
       "payload": {
-        "name": "Weekly tidy 30",
-        "tier": "lowcode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Seller Onboarding Nudge",
+        "description": "Chase sellers who started onboarding and stalled on documents.",
+        "tier": "domain",
+        "riskTier": "low",
+        "systemPrompt": "You are Seller Onboarding Nudge for this merchant. Chase sellers who started onboarding and stalled on documents. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_seller_onboarding_view"
+        ],
+        "triggers": [
+          "application.submitted"
+        ],
+        "subscribedEvents": [
+          "application.submitted"
+        ],
+        "evalCases": [],
+        "purpose": "Chase sellers who started onboarding and stalled on documents.",
+        "limitations": "Read-only. Reports what it found and changes nothing.",
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 4",
+      "kind": "agent",
+      "refKey": "demo-seller-scorecard",
       "payload": {
-        "name": "Weekly tidy 4",
-        "tier": "nocode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Seller Scorecard",
+        "description": "Builds the weekly seller performance summary.",
+        "tier": "supervised",
+        "riskTier": "medium",
+        "systemPrompt": "You are Seller Scorecard. Builds the weekly seller performance summary. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 5",
+      "kind": "agent",
+      "refKey": "settlement-variance",
       "payload": {
-        "name": "Weekly tidy 5",
-        "tier": "nocode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Settlement Variance",
+        "description": "Explain why a seller's payout differs from the previous cycle.",
+        "tier": "domain",
+        "riskTier": "high",
+        "systemPrompt": "You are Settlement Variance for this merchant. Explain why a seller's payout differs from the previous cycle. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_settlements_view",
+          "fcc_order_management_view"
+        ],
+        "triggers": [
+          "settlement.batch_processed"
+        ],
+        "subscribedEvents": [
+          "settlement.batch_processed"
+        ],
+        "evalCases": [],
+        "purpose": "Explain why a seller's payout differs from the previous cycle.",
+        "limitations": "Proposes; a human approves every write.",
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 7",
+      "kind": "agent",
+      "refKey": "demo-stock-chaser",
       "payload": {
-        "name": "Weekly tidy 7",
-        "tier": "fullcode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
+        "name": "Stock Chaser",
+        "description": "Watches velocity against cover and asks the buyer to reorder.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Stock Chaser. Watches velocity against cover and asks the buyer to reorder. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
       }
     },
     {
-      "kind": "custom-function",
-      "refKey": "Weekly tidy 8",
+      "kind": "agent",
+      "refKey": "demo-ticket-summariser",
       "payload": {
-        "name": "Weekly tidy 8",
-        "tier": "nocode",
-        "trigger": "schedule",
-        "triggerKey": null,
-        "code": "return { note: \"nothing to do\" };",
-        "enabled": true
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-14-audit-log",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-15-enterprise-sso",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-17-webhooks",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-18-feature-flags",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-20-studio",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-21-notifications",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-23-app-of-apps",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-24-admin-chat",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-26-agentic-os",
-      "payload": {
-        "enabled": true,
-        "variant": "B"
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-28-i18n",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-30-perf-tests",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-33-insights",
-      "payload": {
-        "enabled": true,
-        "variant": "B"
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-34-event-fabric",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-44-ucp",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-46-soft-delete",
-      "payload": {
-        "enabled": true,
-        "variant": "A"
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-47-tenant-continuity",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-53-customisation-packages",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "seller-portal",
-      "payload": {
-        "enabled": true,
-        "variant": null
+        "name": "Ticket Summariser",
+        "description": "Condenses a long ticket thread for whoever picks it up.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Ticket Summariser. Condenses a long ticket thread for whoever picks it up. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": null,
+        "limitations": null,
+        "pinnedModel": null
       }
     },
     {
@@ -526,30 +1029,6 @@
       "refKey": "Catalogue Manager",
       "payload": {
         "description": "Adds and edits products, cannot see orders or payouts.",
-        "permissions": []
-      }
-    },
-    {
-      "kind": "role",
-      "refKey": "Data Analyst",
-      "payload": {
-        "description": "Insights and dashboards; no write path into commerce.",
-        "permissions": []
-      }
-    },
-    {
-      "kind": "role",
-      "refKey": "Delivery Ops",
-      "payload": {
-        "description": null,
-        "permissions": []
-      }
-    },
-    {
-      "kind": "role",
-      "refKey": "Finance",
-      "payload": {
-        "description": "Settlements, invoices and payouts. Read-only on commerce.",
         "permissions": []
       }
     },
@@ -608,7 +1087,29 @@
         "description": "Stock and fulfilment only.",
         "permissions": []
       }
+    },
+    {
+      "kind": "extension",
+      "refKey": "Fieldstone Rewards",
+      "payload": {
+        "name": "Fieldstone Rewards",
+        "description": "Fieldstone's own loyalty scheme. Points earned on paid orders, redeemed at checkout. Built by Fieldstone on the platform APIs.",
+        "publisherId": "cmtn1bfi700top08o7sl12jjs",
+        "acceptedVersion": "1.4.0",
+        "apiUrl": "http://localhost:4500",
+        "ownAddress": "http://localhost:4500",
+        "webhookUrl": "http://localhost:4500/hooks/fcc",
+        "contributes": [
+          "checkout"
+        ],
+        "webhooks": [
+          "order.placed"
+        ],
+        "scopes": [
+          "order-management:view"
+        ]
+      }
     }
   ],
-  "checksum": "fnv1a-0799a9e1-60"
+  "checksum": "fnv1a-0b77e87e-80"
 }
