@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "requiresApi": "v1",
     "originTenant": "fieldstone-dev",
-    "exportedAt": "2026-09-13T12:56:45.619Z"
+    "exportedAt": "2026-09-13T14:09:51.402Z"
   },
   "elements": [
     {
@@ -90,12 +90,19 @@
       }
     },
     {
-      "kind": "workflow",
-      "refKey": "Late order recovery",
+      "kind": "feature-flag",
+      "refKey": "phase-28-i18n",
       "payload": {
-        "description": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
-        "goal": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
-        "fixedPlan": null
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-30-perf-tests",
+      "payload": {
+        "enabled": true,
+        "variant": null
       }
     },
     {
@@ -131,6 +138,30 @@
         "trigger": "webhook_event",
         "triggerKey": "order.status_changed",
         "code": "if (data.status !== \"delayed\") return {};\nreturn { actions: [{ action: \"create_ticket\", subject: \"Order delayed\", category: \"orders\", priority: \"high\" }] };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Fieldstone Logistics",
+      "payload": {
+        "name": "Fieldstone Logistics",
+        "tier": "fullcode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "// Fieldstone's own delivery promises. Runs in the platform's sandbox:\n// no network, no credential, and nothing to read but what it asked for.\nvar DEFAULTS = {\n  currency: 'INR',\n  sameDaySurchargeMinor: 24900,\n  nextDaySurchargeMinor: 9900,\n  sameDayCapacity: 40,\n  cutOffHour: 22\n};\n\n// The LOCAL date, never the ISO one. `toISOString()` is UTC, and a UTC key\n// with a local cut-off starts booking tomorrow's van at half past six in\n// the evening in Bengaluru — on a day the shopper is still standing in.\nfunction dayKey(d) {\n  return d.getFullYear() + '-' +\n    String(d.getMonth() + 1).padStart(2, '0') + '-' +\n    String(d.getDate()).padStart(2, '0');\n}\n\n// A store that cannot be reached is not a checkout that cannot be used.\n// Every read here falls back, because the alternative is a handler that\n// throws and takes the whole delivery section down with it.\nasync function orElse(promise, fallback) {\n  try { var v = await promise; return v === null || v === undefined ? fallback : v; }\n  catch (e) { console.warn('delivery-slots: store unavailable — ' + e.message); return fallback; }\n}\n\nvar stored = await orElse(host.storage.get('delivery-slots', 'config'), {});\nvar cfg = Object.assign({}, DEFAULTS, stored);\n\nvar now = new Date();\nvar today = dayKey(now);\n\n// Zero is zero in every currency, so the free promise is always safe to\n// make. Everything with a price on it is quoted only in the currency this\n// price book is written in — never converted, because a rate invented\n// inside a checkout is a charge nobody stands behind.\nvar options = [{\n  id: 'standard',\n  label: 'Standard delivery',\n  detail: 'Three to five working days',\n  surchargeMinor: 0,\n  currency: input.currency\n}];\n\nif (input.currency !== cfg.currency) {\n  console.log('delivery-slots: basket in ' + input.currency + ', prices in ' + cfg.currency + ' — free options only');\n  return { options: options };\n}\n\noptions.unshift({\n  id: 'next-day',\n  label: 'Next-day delivery',\n  detail: 'With you before 6pm tomorrow',\n  surchargeMinor: cfg.nextDaySurchargeMinor,\n  currency: cfg.currency\n});\n\n// The van has to exist before it is sold. Counted out of the same namespace\n// the booking handler writes into — if those two ever disagree the count is\n// always zero, capacity never falls, and this reads as healthy for ever.\nif (now.getHours() < cfg.cutOffHour) {\n  var booked = await orElse(\n    host.storage.list('delivery-slots', { prefix: 'booked:' + today + ':same-day:', limit: 200 }),\n    []\n  );\n  if (booked.length < cfg.sameDayCapacity) {\n    options.unshift({\n      id: 'same-day',\n      label: 'Same-day delivery',\n      detail: 'Ordered before ' + cfg.cutOffHour + ':00 — on your doorstep tonight',\n      surchargeMinor: cfg.sameDaySurchargeMinor,\n      currency: cfg.currency\n    });\n  } else {\n    console.log('delivery-slots: same-day full for ' + today + ' (' + booked.length + ' booked)');\n  }\n}\n\nreturn { options: options };",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Fieldstone Logistics booking",
+      "payload": {
+        "name": "Fieldstone Logistics booking",
+        "tier": "fullcode",
+        "trigger": "manual",
+        "triggerKey": null,
+        "code": "// Books the van and writes the promise onto the order, so fulfilment sees\n// what the shopper was actually sold rather than inferring it from a total.\nvar chosen = input.fulfilment;\nif (!chosen || !chosen.id) return {};\n\nfunction dayKey(d) {\n  return d.getFullYear() + '-' +\n    String(d.getMonth() + 1).padStart(2, '0') + '-' +\n    String(d.getDate()).padStart(2, '0');\n}\n\nvar day = dayKey(new Date());\n\n// Keyed on the ORDER. The money has already moved by the time this runs, so\n// it can be called again after a retry — and a key derived from anything\n// else (a timestamp, a counter) would be a second van for one delivery.\nvar booked = { written: false, reason: 'store unavailable' };\ntry {\n  booked = await host.storage.put(\n    'delivery-slots',\n    'booked:' + day + ':' + chosen.id + ':' + input.orderId,\n    {\n      orderId: input.orderId,\n      slot: chosen.id,\n      label: chosen.label,\n      surchargeMinor: chosen.surchargeMinor,\n      currency: input.currency,\n      at: new Date().toISOString()\n    }\n  );\n} catch (e) {\n  console.error('delivery-slots: could not book ' + chosen.id + ' — ' + e.message);\n}\n\n// The attributes go on the order whether or not the van was reserved. A\n// shopper who paid a surcharge is owed a record of what for, and 'no' here\n// is what tells a dispatcher to look rather than to assume.\nreturn {\n  attributes: {\n    'delivery-slot': String(chosen.label || chosen.id),\n    'delivery-slot-id': String(chosen.id),\n    'delivery-surcharge-minor': String(chosen.surchargeMinor || 0),\n    'delivery-currency': String(input.currency || ''),\n    'delivery-booked': booked && booked.written ? 'yes' : 'no'\n  }\n};",
         "enabled": true
       }
     },
@@ -264,6 +295,14 @@
         "triggerKey": null,
         "code": "return { note: \"nothing to do\" };",
         "enabled": false
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-33-insights",
+      "payload": {
+        "enabled": true,
+        "variant": "B"
       }
     },
     {
@@ -460,30 +499,6 @@
     },
     {
       "kind": "feature-flag",
-      "refKey": "phase-28-i18n",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-30-perf-tests",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-33-insights",
-      "payload": {
-        "enabled": true,
-        "variant": "B"
-      }
-    },
-    {
-      "kind": "feature-flag",
       "refKey": "phase-34-event-fabric",
       "payload": {
         "enabled": true,
@@ -528,30 +543,6 @@
       "payload": {
         "enabled": true,
         "variant": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "payment-failure-digest",
-      "payload": {
-        "name": "Payment Failure Digest",
-        "description": "Group the day's payment failures by gateway reason and report the pattern.",
-        "tier": "domain",
-        "riskTier": "medium",
-        "systemPrompt": "You are Payment Failure Digest for this merchant. Group the day's payment failures by gateway reason and report the pattern. Use the tools you are given; never state a figure you have not read from one.",
-        "capabilities": [
-          "fcc_payments_view"
-        ],
-        "triggers": [
-          "payment.failed"
-        ],
-        "subscribedEvents": [
-          "payment.failed"
-        ],
-        "evalCases": [],
-        "purpose": "Group the day's payment failures by gateway reason and report the pattern.",
-        "limitations": "Read-only. Reports what it found and changes nothing.",
-        "pinnedModel": null
       }
     },
     {
@@ -805,12 +796,27 @@
       }
     },
     {
-      "kind": "workflow",
-      "refKey": "Incident Response",
+      "kind": "agent",
+      "refKey": "payment-failure-digest",
       "payload": {
-        "description": "Diagnose and remediate a service incident",
-        "goal": "Investigate and resolve: {service} is experiencing {issue}. Diagnose root cause, propose fix, and apply after approval",
-        "fixedPlan": null
+        "name": "Payment Failure Digest",
+        "description": "Group the day's payment failures by gateway reason and report the pattern.",
+        "tier": "domain",
+        "riskTier": "medium",
+        "systemPrompt": "You are Payment Failure Digest for this merchant. Group the day's payment failures by gateway reason and report the pattern. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_payments_view"
+        ],
+        "triggers": [
+          "payment.failed"
+        ],
+        "subscribedEvents": [
+          "payment.failed"
+        ],
+        "evalCases": [],
+        "purpose": "Group the day's payment failures by gateway reason and report the pattern.",
+        "limitations": "Read-only. Reports what it found and changes nothing.",
+        "pinnedModel": null
       }
     },
     {
@@ -1060,6 +1066,24 @@
     },
     {
       "kind": "workflow",
+      "refKey": "Incident Response",
+      "payload": {
+        "description": "Diagnose and remediate a service incident",
+        "goal": "Investigate and resolve: {service} is experiencing {issue}. Diagnose root cause, propose fix, and apply after approval",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Late order recovery",
+      "payload": {
+        "description": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
+        "goal": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
       "refKey": "Refund backlog clear-down",
       "payload": {
         "description": "Work the refund queue oldest first and escalate what is stuck.",
@@ -1184,6 +1208,38 @@
       }
     },
     {
+      "kind": "ui-surface",
+      "refKey": "checkout.fulfilment",
+      "payload": {
+        "slot": "checkout.fulfilment",
+        "source": "function",
+        "extensionName": null,
+        "functionName": "Fieldstone Logistics",
+        "bundleName": null,
+        "bundleSourcePath": null,
+        "embedUrl": null,
+        "readsCollection": "delivery-slots",
+        "scopes": "[]",
+        "enabled": true
+      }
+    },
+    {
+      "kind": "ui-surface",
+      "refKey": "order.enrich",
+      "payload": {
+        "slot": "order.enrich",
+        "source": "function",
+        "extensionName": null,
+        "functionName": "Fieldstone Logistics booking",
+        "bundleName": null,
+        "bundleSourcePath": null,
+        "embedUrl": null,
+        "readsCollection": "delivery-slots",
+        "scopes": "[]",
+        "enabled": true
+      }
+    },
+    {
       "kind": "extension",
       "refKey": "Fieldstone Rewards",
       "payload": {
@@ -1206,5 +1262,5 @@
       }
     }
   ],
-  "checksum": "fnv1a-518f4aba-90"
+  "checksum": "fnv1a-55716b2b-94"
 }
