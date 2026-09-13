@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "requiresApi": "v1",
     "originTenant": "fieldstone-dev",
-    "exportedAt": "2026-09-12T15:51:05.131Z"
+    "exportedAt": "2026-09-13T08:51:34.132Z"
   },
   "elements": [
     {
@@ -87,6 +87,15 @@
         "triggerKey": "order.status_changed",
         "code": "if (data.status !== \"delayed\") return {};\nreturn { actions: [{ action: \"create_ticket\", subject: \"Order delayed\", category: \"orders\", priority: \"high\" }] };",
         "enabled": true
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Late order recovery",
+      "payload": {
+        "description": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
+        "goal": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
+        "fixedPlan": null
       }
     },
     {
@@ -523,6 +532,30 @@
     },
     {
       "kind": "agent",
+      "refKey": "payment-failure-digest",
+      "payload": {
+        "name": "Payment Failure Digest",
+        "description": "Group the day's payment failures by gateway reason and report the pattern.",
+        "tier": "domain",
+        "riskTier": "medium",
+        "systemPrompt": "You are Payment Failure Digest for this merchant. Group the day's payment failures by gateway reason and report the pattern. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_payments_view"
+        ],
+        "triggers": [
+          "payment.failed"
+        ],
+        "subscribedEvents": [
+          "payment.failed"
+        ],
+        "evalCases": [],
+        "purpose": "Group the day's payment failures by gateway reason and report the pattern.",
+        "limitations": "Read-only. Reports what it found and changes nothing.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
       "refKey": "demo-campaign-critic",
       "payload": {
         "name": "Campaign Critic",
@@ -539,9 +572,14 @@
           "schedule"
         ],
         "subscribedEvents": [],
-        "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "evalCases": [
+          {
+            "prompt": "A rug in Home & Living promises delivery in nine days.",
+            "expect": "flagged, because Home & Living allows five"
+          }
+        ],
+        "purpose": "Compares campaign spend against attributed return and names the ones to stop.",
+        "limitations": "Sees attributed revenue only. A campaign that built demand somebody acted on a week later, through another channel, looks like waste here.",
         "pinnedModel": null
       }
     },
@@ -564,8 +602,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Finds abandoned baskets worth recovering and drafts the message.",
+        "limitations": "Cannot tell an abandoned basket from one somebody is still thinking about, or from a shopper who bought the same thing in a shop an hour later.",
         "pinnedModel": null
       }
     },
@@ -588,8 +626,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Finds searches and demand signals the catalogue has no answer for.",
+        "limitations": "Sees demand that reached this shop. It cannot see a category customers never thought to look here for.",
         "pinnedModel": null
       }
     },
@@ -612,8 +650,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Picks a courier for each shipment from recorded cost and delivered-on-time history.",
+        "limitations": "Reasons from past performance on this lane, which is not a forecast. It cannot see a strike, a closed road, or a courier who has just lost a depot.",
         "pinnedModel": null
       }
     },
@@ -663,8 +701,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Explains, in a sentence a support agent can read to a customer, why an order was held.",
+        "limitations": "Explains the decision; it does not make or review it. If the rule that held the order was wrong, this will explain the wrong rule clearly.",
         "pinnedModel": null
       }
     },
@@ -712,8 +750,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Improves listing titles and names the attributes a category expects and a listing lacks.",
+        "limitations": "Judges the words, not the product. It cannot tell whether a claim in a title is true, and it does not look at the image.",
         "pinnedModel": null
       }
     },
@@ -761,33 +799,18 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Warns before a promotion takes a SKU under its floor margin.",
+        "limitations": "Uses the cost recorded against the SKU. It cannot see supplier rebates, freight billed separately, or a cost that changed after the last import.",
         "pinnedModel": null
       }
     },
     {
-      "kind": "agent",
-      "refKey": "payment-failure-digest",
+      "kind": "workflow",
+      "refKey": "Incident Response",
       "payload": {
-        "name": "Payment Failure Digest",
-        "description": "Group the day's payment failures by gateway reason and report the pattern.",
-        "tier": "domain",
-        "riskTier": "medium",
-        "systemPrompt": "You are Payment Failure Digest for this merchant. Group the day's payment failures by gateway reason and report the pattern. Use the tools you are given; never state a figure you have not read from one.",
-        "capabilities": [
-          "fcc_payments_view"
-        ],
-        "triggers": [
-          "payment.failed"
-        ],
-        "subscribedEvents": [
-          "payment.failed"
-        ],
-        "evalCases": [],
-        "purpose": "Group the day's payment failures by gateway reason and report the pattern.",
-        "limitations": "Read-only. Reports what it found and changes nothing.",
-        "pinnedModel": null
+        "description": "Diagnose and remediate a service incident",
+        "goal": "Investigate and resolve: {service} is experiencing {issue}. Diagnose root cause, propose fix, and apply after approval",
+        "fixedPlan": null
       }
     },
     {
@@ -809,8 +832,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Matches each settlement against the gateway's own record and reports where they disagree.",
+        "limitations": "Reports the gap; it does not decide who is right. A timing difference across a cutoff and a genuine shortfall look the same to it.",
         "pinnedModel": null
       }
     },
@@ -833,8 +856,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Sorts refund requests into those that clearly meet policy and those a person should read.",
+        "limitations": "Reads the request and the order, not the item. It cannot tell a genuine fault from a change of mind described as one, and it never sees the returned goods.",
         "pinnedModel": null
       }
     },
@@ -930,8 +953,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Assembles each seller's week: fulfilment, returns, ratings and disputes, in one place.",
+        "limitations": "Counts what the platform recorded. A seller resolving a problem off-platform looks identical to one who had no problem.",
         "pinnedModel": null
       }
     },
@@ -979,8 +1002,8 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Flags SKUs whose cover will run out before the next delivery lands, and drafts the reorder for a buyer to send.",
+        "limitations": "Trusts the recorded stock figure — it cannot detect shrinkage, damage, or a miscount at the source. It does not know about deliveries agreed by phone and not yet in the system.",
         "pinnedModel": null
       }
     },
@@ -1003,9 +1026,81 @@
         ],
         "subscribedEvents": [],
         "evalCases": [],
-        "purpose": null,
-        "limitations": null,
+        "purpose": "Summarises a long support thread for whoever picks it up next.",
+        "limitations": "Summarises what is written in the ticket. A promise made on a phone call, or a detail somebody never typed, is not in the thread and will not be in the summary.",
         "pinnedModel": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Catalogue hygiene sweep",
+      "payload": {
+        "description": "Find listings with missing attributes or no images.",
+        "goal": "Find listings with missing attributes or no images.",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Festive readiness",
+      "payload": {
+        "description": "Check stock, pricing and promotions are consistent before a campaign opens.",
+        "goal": "Check stock, pricing and promotions are consistent before a campaign opens.",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Flash Sale Campaign",
+      "payload": {
+        "description": "Orchestrate a weekend flash sale across pricing, promotions, advertising and stock",
+        "goal": "Run a flash sale for {category} this weekend: apply {discount}% discount, create promotion campaign, update ad budgets, and confirm stock cover for the discounted range",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Refund backlog clear-down",
+      "payload": {
+        "description": "Work the refund queue oldest first and escalate what is stuck.",
+        "goal": "Work the refund queue oldest first and escalate what is stuck.",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Seasonal Clearance",
+      "payload": {
+        "description": "Coordinate end-of-season clearance across catalog, pricing, and marketing",
+        "goal": "Run {season} clearance for {category}: mark down prices by {discount}%, update promotions, and refresh ad campaigns",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Seller Onboarding",
+      "payload": {
+        "description": "Provision and configure all core services for a new seller",
+        "goal": "Onboard a new {vertical} seller: import initial catalog, set pricing rules, configure listings, and complete seller registration",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Seller payout query",
+      "payload": {
+        "description": "Answer a seller asking why their payout changed.",
+        "goal": "Answer a seller asking why their payout changed.",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Weekly trading review",
+      "payload": {
+        "description": "Assemble the numbers a Monday trading meeting asks for.",
+        "goal": "Assemble the numbers a Monday trading meeting asks for.",
+        "fixedPlan": null
       }
     },
     {
@@ -1111,5 +1206,5 @@
       }
     }
   ],
-  "checksum": "fnv1a-0b77e87e-80"
+  "checksum": "fnv1a-518f4aba-90"
 }

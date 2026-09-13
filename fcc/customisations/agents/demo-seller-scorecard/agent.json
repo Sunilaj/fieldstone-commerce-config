@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Assembles each seller's week: fulfilment, returns, ratings and disputes, in one place.",
+  "limitations": "Counts what the platform recorded. A seller resolving a problem off-platform looks identical to one who had no problem.",
   "pinnedModel": null
 }

@@ -1,0 +1,6 @@
+{
+  "name": "Seasonal Clearance",
+  "description": "Coordinate end-of-season clearance across catalog, pricing, and marketing",
+  "goal": "Run {season} clearance for {category}: mark down prices by {discount}%, update promotions, and refresh ad campaigns",
+  "fixedPlan": null
+}

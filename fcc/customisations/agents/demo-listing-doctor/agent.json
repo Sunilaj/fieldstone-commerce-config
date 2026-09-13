@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Improves listing titles and names the attributes a category expects and a listing lacks.",
+  "limitations": "Judges the words, not the product. It cannot tell whether a claim in a title is true, and it does not look at the image.",
   "pinnedModel": null
 }

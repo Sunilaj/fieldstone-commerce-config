@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Compares campaign spend against attributed return and names the ones to stop.",
+  "limitations": "Sees attributed revenue only. A campaign that built demand somebody acted on a week later, through another channel, looks like waste here.",
   "pinnedModel": null
 }

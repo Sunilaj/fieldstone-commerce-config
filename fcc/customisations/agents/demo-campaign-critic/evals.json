@@ -1,1 +1,6 @@
-[]
+[
+  {
+    "prompt": "A rug in Home & Living promises delivery in nine days.",
+    "expect": "flagged, because Home & Living allows five"
+  }
+]

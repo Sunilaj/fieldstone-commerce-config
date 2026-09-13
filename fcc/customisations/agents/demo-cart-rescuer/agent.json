@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Finds abandoned baskets worth recovering and drafts the message.",
+  "limitations": "Cannot tell an abandoned basket from one somebody is still thinking about, or from a shopper who bought the same thing in a shop an hour later.",
   "pinnedModel": null
 }

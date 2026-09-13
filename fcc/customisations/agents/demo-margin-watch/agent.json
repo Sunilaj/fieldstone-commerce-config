@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Warns before a promotion takes a SKU under its floor margin.",
+  "limitations": "Uses the cost recorded against the SKU. It cannot see supplier rebates, freight billed separately, or a cost that changed after the last import.",
   "pinnedModel": null
 }

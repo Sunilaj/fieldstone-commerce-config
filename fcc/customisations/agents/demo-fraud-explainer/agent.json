@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Explains, in a sentence a support agent can read to a customer, why an order was held.",
+  "limitations": "Explains the decision; it does not make or review it. If the rule that held the order was wrong, this will explain the wrong rule clearly.",
   "pinnedModel": null
 }

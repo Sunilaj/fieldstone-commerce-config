@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Matches each settlement against the gateway's own record and reports where they disagree.",
+  "limitations": "Reports the gap; it does not decide who is right. A timing difference across a cutoff and a genuine shortfall look the same to it.",
   "pinnedModel": null
 }

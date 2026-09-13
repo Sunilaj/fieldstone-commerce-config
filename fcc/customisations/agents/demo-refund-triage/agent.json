@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Sorts refund requests into those that clearly meet policy and those a person should read.",
+  "limitations": "Reads the request and the order, not the item. It cannot tell a genuine fault from a change of mind described as one, and it never sees the returned goods.",
   "pinnedModel": null
 }

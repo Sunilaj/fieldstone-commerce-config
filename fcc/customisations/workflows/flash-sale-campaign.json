@@ -1,0 +1,6 @@
+{
+  "name": "Flash Sale Campaign",
+  "description": "Orchestrate a weekend flash sale across pricing, promotions, advertising and stock",
+  "goal": "Run a flash sale for {category} this weekend: apply {discount}% discount, create promotion campaign, update ad budgets, and confirm stock cover for the discounted range",
+  "fixedPlan": null
+}
