@@ -429,7 +429,16 @@ describe("what a shopper is told about their basket", () => {
   it("says how far they are from the next tier", async () => {
     await earn(400);
     const body = await (await call("/ui/cart-summary", { shopperId: "shopper-1" })).json() as { elements: Array<{ text: string }> };
-    expect(body.elements[0].text).toMatch(/600 more to reach Gold/);
+    expect(body.elements[0].text).toMatch(/100 more to reach Gold/);
+  });
+
+  it("does not tell a Gold member to keep buying to reach Gold", async () => {
+    /* Six hundred is Gold on today's ladder and was not on the old one, which
+       is exactly the gap the previous test at fifteen hundred stepped over. */
+    await earn(600);
+    const body = await (await call("/ui/cart-summary", { shopperId: "shopper-1" })).json() as { elements: Array<{ text: string; tone: string }> };
+    expect(body.elements[0].text).not.toMatch(/reach Gold/);
+    expect(body.elements[0].tone).toBe("success");
   });
 
   it("says something useful once they are past it, rather than a negative number", async () => {

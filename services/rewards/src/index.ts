@@ -54,6 +54,22 @@ const MINOR_UNITS_PER_POINT = 100;
  */
 const MIN_REDEEMABLE = 100;
 
+/*
+  The ladder, named once, because the copy of it has now been wrong twice.
+
+  tierFor carried these as bare numbers and /ui/cart-summary carried its own
+  copy of the Gold one. 3504fba moved the ladder and 1573c74 moved it again,
+  and neither touched the cart; 204ba9a caught exactly this drift in the
+  dashboard and did not know to look here. So a shopper on six hundred points
+  was Gold already, and their basket was still telling them to buy more to
+  reach Gold.
+
+  Naming it is what stops it being a matter of opinion, which is the same
+  reason the earn unit got a name.
+*/
+const GOLD_AT = 500;
+const TRADE_AT = 2_000;
+
 /**
  * SKU prefixes Fieldstone gives double points on.
  *
@@ -82,8 +98,8 @@ async function tierFor(token: string | null, tenantId: string, shopperId: string
     Roughly five and twenty thousand rupees of spending — a regular customer
     and a trade buyer, which is what the two names were always meant to say.
   */
-  if (points >= 2_000) return { name: "Trade", discountPercent: 10 };
-  if (points >= 500) return { name: "Gold", discountPercent: 5 };
+  if (points >= TRADE_AT) return { name: "Trade", discountPercent: 10 };
+  if (points >= GOLD_AT) return { name: "Gold", discountPercent: 5 };
   if (points > 0) return { name: "Member", discountPercent: 0 };
   return null;
 }
@@ -607,7 +623,7 @@ app.post("/ui/cart-summary", async (c) => {
   if (!shopperId) return c.json({ elements: [] });
 
   const points = await balance(token, caller.tenantId, shopperId);
-  const toGold = Math.max(0, 1_000 - points);
+  const toGold = Math.max(0, GOLD_AT - points);
   return c.json({
     elements: [
       toGold > 0
