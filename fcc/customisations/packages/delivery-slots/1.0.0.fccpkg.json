@@ -6,267 +6,9 @@
     "version": "1.0.0",
     "requiresApi": "v1",
     "originTenant": "fieldstone-dev",
-    "exportedAt": "2026-09-14T14:04:41.499Z"
+    "exportedAt": "2026-09-14T15:05:21.831Z"
   },
   "elements": [
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-46-soft-delete",
-      "payload": {
-        "enabled": true,
-        "variant": "A"
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-47-tenant-continuity",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "phase-53-customisation-packages",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "feature-flag",
-      "refKey": "seller-portal",
-      "payload": {
-        "enabled": true,
-        "variant": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "demo-campaign-critic",
-      "payload": {
-        "name": "Campaign Critic",
-        "description": "Reviews campaign spend against return and says what to cut.",
-        "tier": "assisted",
-        "riskTier": "medium",
-        "systemPrompt": "You are Campaign Critic. Reviews campaign spend against return and says what to cut. Propose; never act without approval.",
-        "capabilities": [
-          "read",
-          "propose"
-        ],
-        "triggers": [
-          "manual",
-          "schedule"
-        ],
-        "subscribedEvents": [],
-        "evalCases": [
-          {
-            "prompt": "A rug in Home & Living promises delivery in nine days.",
-            "expect": "flagged, because Home & Living allows five"
-          }
-        ],
-        "purpose": "Compares campaign spend against attributed return and names the ones to stop.",
-        "limitations": "Sees attributed revenue only. A campaign that built demand somebody acted on a week later, through another channel, looks like waste here.",
-        "pinnedModel": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "demo-cart-rescuer",
-      "payload": {
-        "name": "Cart Rescuer",
-        "description": "Spots abandoned carts worth a nudge and drafts it.",
-        "tier": "assisted",
-        "riskTier": "medium",
-        "systemPrompt": "You are Cart Rescuer. Spots abandoned carts worth a nudge and drafts it. Propose; never act without approval.",
-        "capabilities": [
-          "read",
-          "propose"
-        ],
-        "triggers": [
-          "manual",
-          "schedule"
-        ],
-        "subscribedEvents": [],
-        "evalCases": [],
-        "purpose": "Finds abandoned baskets worth recovering and drafts the message.",
-        "limitations": "Cannot tell an abandoned basket from one somebody is still thinking about, or from a shopper who bought the same thing in a shop an hour later.",
-        "pinnedModel": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "demo-category-scout",
-      "payload": {
-        "name": "Category Scout",
-        "description": "Finds categories with demand the catalogue does not serve.",
-        "tier": "supervised",
-        "riskTier": "medium",
-        "systemPrompt": "You are Category Scout. Finds categories with demand the catalogue does not serve. Propose; never act without approval.",
-        "capabilities": [
-          "read",
-          "propose"
-        ],
-        "triggers": [
-          "manual",
-          "schedule"
-        ],
-        "subscribedEvents": [],
-        "evalCases": [],
-        "purpose": "Finds searches and demand signals the catalogue has no answer for.",
-        "limitations": "Sees demand that reached this shop. It cannot see a category customers never thought to look here for.",
-        "pinnedModel": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "demo-courier-picker",
-      "payload": {
-        "name": "Courier Picker",
-        "description": "Chooses a courier per shipment on cost and reliability.",
-        "tier": "supervised",
-        "riskTier": "medium",
-        "systemPrompt": "You are Courier Picker. Chooses a courier per shipment on cost and reliability. Propose; never act without approval.",
-        "capabilities": [
-          "read",
-          "propose"
-        ],
-        "triggers": [
-          "manual",
-          "schedule"
-        ],
-        "subscribedEvents": [],
-        "evalCases": [],
-        "purpose": "Picks a courier for each shipment from recorded cost and delivered-on-time history.",
-        "limitations": "Reasons from past performance on this lane, which is not a forecast. It cannot see a strike, a closed road, or a courier who has just lost a depot.",
-        "pinnedModel": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "festive-stock-watch",
-      "payload": {
-        "name": "Festive Stock Watch",
-        "description": "Warn when a festive-season line is going to sell out before the campaign ends.",
-        "tier": "domain",
-        "riskTier": "medium",
-        "systemPrompt": "You are Festive Stock Watch for this merchant. Warn when a festive-season line is going to sell out before the campaign ends. Use the tools you are given; never state a figure you have not read from one.",
-        "capabilities": [
-          "fcc_warehouse_management_view",
-          "fcc_catalog_management_view"
-        ],
-        "triggers": [
-          "stock.movement",
-          "product.status_changed"
-        ],
-        "subscribedEvents": [
-          "stock.movement",
-          "product.status_changed"
-        ],
-        "evalCases": [],
-        "purpose": "Warn when a festive-season line is going to sell out before the campaign ends.",
-        "limitations": "Read-only. Reports what it found and changes nothing.",
-        "pinnedModel": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "demo-fraud-explainer",
-      "payload": {
-        "name": "Fraud Explainer",
-        "description": "Says in plain words why an order was held.",
-        "tier": "assisted",
-        "riskTier": "medium",
-        "systemPrompt": "You are Fraud Explainer. Says in plain words why an order was held. Propose; never act without approval.",
-        "capabilities": [
-          "read",
-          "propose"
-        ],
-        "triggers": [
-          "manual",
-          "schedule"
-        ],
-        "subscribedEvents": [],
-        "evalCases": [],
-        "purpose": "Explains, in a sentence a support agent can read to a customer, why an order was held.",
-        "limitations": "Explains the decision; it does not make or review it. If the rule that held the order was wrong, this will explain the wrong rule clearly.",
-        "pinnedModel": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "late-delivery-triage",
-      "payload": {
-        "name": "Late Delivery Triage",
-        "description": "Open a ticket and notify the customer when a shipment misses its promise date.",
-        "tier": "domain",
-        "riskTier": "high",
-        "systemPrompt": "You are Late Delivery Triage for this merchant. Open a ticket and notify the customer when a shipment misses its promise date. Use the tools you are given; never state a figure you have not read from one.",
-        "capabilities": [
-          "fcc_fulfillment_view",
-          "fcc_support_management_configure"
-        ],
-        "triggers": [
-          "shipment.status_changed"
-        ],
-        "subscribedEvents": [
-          "shipment.status_changed"
-        ],
-        "evalCases": [],
-        "purpose": "Open a ticket and notify the customer when a shipment misses its promise date.",
-        "limitations": "Proposes; a human approves every write.",
-        "pinnedModel": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "demo-listing-doctor",
-      "payload": {
-        "name": "Listing Doctor",
-        "description": "Rewrites thin titles and flags missing attributes.",
-        "tier": "assisted",
-        "riskTier": "medium",
-        "systemPrompt": "You are Listing Doctor. Rewrites thin titles and flags missing attributes. Propose; never act without approval.",
-        "capabilities": [
-          "read",
-          "propose"
-        ],
-        "triggers": [
-          "manual",
-          "schedule"
-        ],
-        "subscribedEvents": [],
-        "evalCases": [],
-        "purpose": "Improves listing titles and names the attributes a category expects and a listing lacks.",
-        "limitations": "Judges the words, not the product. It cannot tell whether a claim in a title is true, and it does not look at the image.",
-        "pinnedModel": null
-      }
-    },
-    {
-      "kind": "agent",
-      "refKey": "margin-guard",
-      "payload": {
-        "name": "Margin Guard",
-        "description": "Flag any repricing that would take a SKU below its floor margin.",
-        "tier": "domain",
-        "riskTier": "high",
-        "systemPrompt": "You are Margin Guard for this merchant. Flag any repricing that would take a SKU below its floor margin. Use the tools you are given; never state a figure you have not read from one.",
-        "capabilities": [
-          "fcc_dynamic_pricing_view",
-          "fcc_pricing_optimizer_view"
-        ],
-        "triggers": [
-          "price.changed"
-        ],
-        "subscribedEvents": [
-          "price.changed"
-        ],
-        "evalCases": [],
-        "purpose": "Flag any repricing that would take a SKU below its floor margin.",
-        "limitations": "Proposes; a human approves every write.",
-        "pinnedModel": null
-      }
-    },
     {
       "kind": "branding",
       "refKey": "default",
@@ -769,6 +511,264 @@
       "payload": {
         "enabled": true,
         "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-46-soft-delete",
+      "payload": {
+        "enabled": true,
+        "variant": "A"
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-47-tenant-continuity",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "phase-53-customisation-packages",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "feature-flag",
+      "refKey": "seller-portal",
+      "payload": {
+        "enabled": true,
+        "variant": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-campaign-critic",
+      "payload": {
+        "name": "Campaign Critic",
+        "description": "Reviews campaign spend against return and says what to cut.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Campaign Critic. Reviews campaign spend against return and says what to cut. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [
+          {
+            "prompt": "A rug in Home & Living promises delivery in nine days.",
+            "expect": "flagged, because Home & Living allows five"
+          }
+        ],
+        "purpose": "Compares campaign spend against attributed return and names the ones to stop.",
+        "limitations": "Sees attributed revenue only. A campaign that built demand somebody acted on a week later, through another channel, looks like waste here.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-cart-rescuer",
+      "payload": {
+        "name": "Cart Rescuer",
+        "description": "Spots abandoned carts worth a nudge and drafts it.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Cart Rescuer. Spots abandoned carts worth a nudge and drafts it. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": "Finds abandoned baskets worth recovering and drafts the message.",
+        "limitations": "Cannot tell an abandoned basket from one somebody is still thinking about, or from a shopper who bought the same thing in a shop an hour later.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-category-scout",
+      "payload": {
+        "name": "Category Scout",
+        "description": "Finds categories with demand the catalogue does not serve.",
+        "tier": "supervised",
+        "riskTier": "medium",
+        "systemPrompt": "You are Category Scout. Finds categories with demand the catalogue does not serve. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": "Finds searches and demand signals the catalogue has no answer for.",
+        "limitations": "Sees demand that reached this shop. It cannot see a category customers never thought to look here for.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-courier-picker",
+      "payload": {
+        "name": "Courier Picker",
+        "description": "Chooses a courier per shipment on cost and reliability.",
+        "tier": "supervised",
+        "riskTier": "medium",
+        "systemPrompt": "You are Courier Picker. Chooses a courier per shipment on cost and reliability. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": "Picks a courier for each shipment from recorded cost and delivered-on-time history.",
+        "limitations": "Reasons from past performance on this lane, which is not a forecast. It cannot see a strike, a closed road, or a courier who has just lost a depot.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "festive-stock-watch",
+      "payload": {
+        "name": "Festive Stock Watch",
+        "description": "Warn when a festive-season line is going to sell out before the campaign ends.",
+        "tier": "domain",
+        "riskTier": "medium",
+        "systemPrompt": "You are Festive Stock Watch for this merchant. Warn when a festive-season line is going to sell out before the campaign ends. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_warehouse_management_view",
+          "fcc_catalog_management_view"
+        ],
+        "triggers": [
+          "stock.movement",
+          "product.status_changed"
+        ],
+        "subscribedEvents": [
+          "stock.movement",
+          "product.status_changed"
+        ],
+        "evalCases": [],
+        "purpose": "Warn when a festive-season line is going to sell out before the campaign ends.",
+        "limitations": "Read-only. Reports what it found and changes nothing.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-fraud-explainer",
+      "payload": {
+        "name": "Fraud Explainer",
+        "description": "Says in plain words why an order was held.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Fraud Explainer. Says in plain words why an order was held. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": "Explains, in a sentence a support agent can read to a customer, why an order was held.",
+        "limitations": "Explains the decision; it does not make or review it. If the rule that held the order was wrong, this will explain the wrong rule clearly.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "late-delivery-triage",
+      "payload": {
+        "name": "Late Delivery Triage",
+        "description": "Open a ticket and notify the customer when a shipment misses its promise date.",
+        "tier": "domain",
+        "riskTier": "high",
+        "systemPrompt": "You are Late Delivery Triage for this merchant. Open a ticket and notify the customer when a shipment misses its promise date. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_fulfillment_view",
+          "fcc_support_management_configure"
+        ],
+        "triggers": [
+          "shipment.status_changed"
+        ],
+        "subscribedEvents": [
+          "shipment.status_changed"
+        ],
+        "evalCases": [],
+        "purpose": "Open a ticket and notify the customer when a shipment misses its promise date.",
+        "limitations": "Proposes; a human approves every write.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "demo-listing-doctor",
+      "payload": {
+        "name": "Listing Doctor",
+        "description": "Rewrites thin titles and flags missing attributes.",
+        "tier": "assisted",
+        "riskTier": "medium",
+        "systemPrompt": "You are Listing Doctor. Rewrites thin titles and flags missing attributes. Propose; never act without approval.",
+        "capabilities": [
+          "read",
+          "propose"
+        ],
+        "triggers": [
+          "manual",
+          "schedule"
+        ],
+        "subscribedEvents": [],
+        "evalCases": [],
+        "purpose": "Improves listing titles and names the attributes a category expects and a listing lacks.",
+        "limitations": "Judges the words, not the product. It cannot tell whether a claim in a title is true, and it does not look at the image.",
+        "pinnedModel": null
+      }
+    },
+    {
+      "kind": "agent",
+      "refKey": "margin-guard",
+      "payload": {
+        "name": "Margin Guard",
+        "description": "Flag any repricing that would take a SKU below its floor margin.",
+        "tier": "domain",
+        "riskTier": "high",
+        "systemPrompt": "You are Margin Guard for this merchant. Flag any repricing that would take a SKU below its floor margin. Use the tools you are given; never state a figure you have not read from one.",
+        "capabilities": [
+          "fcc_dynamic_pricing_view",
+          "fcc_pricing_optimizer_view"
+        ],
+        "triggers": [
+          "price.changed"
+        ],
+        "subscribedEvents": [
+          "price.changed"
+        ],
+        "evalCases": [],
+        "purpose": "Flag any repricing that would take a SKU below its floor margin.",
+        "limitations": "Proposes; a human approves every write.",
+        "pinnedModel": null
       }
     },
     {
