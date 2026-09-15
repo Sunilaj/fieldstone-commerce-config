@@ -6,45 +6,9 @@
     "version": "1.0.0",
     "requiresApi": "v1",
     "originTenant": "fieldstone-dev",
-    "exportedAt": "2026-09-15T06:24:51.948Z"
+    "exportedAt": "2026-09-15T06:58:30.345Z"
   },
   "elements": [
-    {
-      "kind": "workflow",
-      "refKey": "Late order recovery",
-      "payload": {
-        "description": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
-        "goal": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
-        "fixedPlan": null
-      }
-    },
-    {
-      "kind": "workflow",
-      "refKey": "Refund backlog clear-down",
-      "payload": {
-        "description": "Work the refund queue oldest first and escalate what is stuck.",
-        "goal": "Work the refund queue oldest first and escalate what is stuck.",
-        "fixedPlan": null
-      }
-    },
-    {
-      "kind": "workflow",
-      "refKey": "Seasonal Clearance",
-      "payload": {
-        "description": "Coordinate end-of-season clearance across catalog, pricing, and marketing",
-        "goal": "Run {season} clearance for {category}: mark down prices by {discount}%, update promotions, and refresh ad campaigns",
-        "fixedPlan": null
-      }
-    },
-    {
-      "kind": "workflow",
-      "refKey": "Seller payout query",
-      "payload": {
-        "description": "Answer a seller asking why their payout changed.",
-        "goal": "Answer a seller asking why their payout changed.",
-        "fixedPlan": null
-      }
-    },
     {
       "kind": "branding",
       "refKey": "default",
@@ -611,15 +575,6 @@
       }
     },
     {
-      "kind": "workflow",
-      "refKey": "Seller Onboarding",
-      "payload": {
-        "description": "Provision and configure all core services for a new seller",
-        "goal": "Onboard a new {vertical} seller: import initial catalog, set pricing rules, configure listings, and complete seller registration",
-        "fixedPlan": null
-      }
-    },
-    {
       "kind": "agent",
       "refKey": "demo-cart-rescuer",
       "payload": {
@@ -865,15 +820,6 @@
       }
     },
     {
-      "kind": "workflow",
-      "refKey": "Incident Response",
-      "payload": {
-        "description": "Diagnose and remediate a service incident",
-        "goal": "Investigate and resolve: {service} is experiencing {issue}. Diagnose root cause, propose fix, and apply after approval",
-        "fixedPlan": null
-      }
-    },
-    {
       "kind": "agent",
       "refKey": "demo-payout-reconciler",
       "payload": {
@@ -1115,6 +1061,60 @@
       "payload": {
         "description": "Orchestrate a weekend flash sale across pricing, promotions, advertising and stock",
         "goal": "Run a flash sale for {category} this weekend: apply {discount}% discount, create promotion campaign, update ad budgets, and confirm stock cover for the discounted range",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Incident Response",
+      "payload": {
+        "description": "Diagnose and remediate a service incident",
+        "goal": "Investigate and resolve: {service} is experiencing {issue}. Diagnose root cause, propose fix, and apply after approval",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Late order recovery",
+      "payload": {
+        "description": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
+        "goal": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Refund backlog clear-down",
+      "payload": {
+        "description": "Work the refund queue oldest first and escalate what is stuck.",
+        "goal": "Work the refund queue oldest first and escalate what is stuck.",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Seasonal Clearance",
+      "payload": {
+        "description": "Coordinate end-of-season clearance across catalog, pricing, and marketing",
+        "goal": "Run {season} clearance for {category}: mark down prices by {discount}%, update promotions, and refresh ad campaigns",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Seller Onboarding",
+      "payload": {
+        "description": "Provision and configure all core services for a new seller",
+        "goal": "Onboard a new {vertical} seller: import initial catalog, set pricing rules, configure listings, and complete seller registration",
+        "fixedPlan": null
+      }
+    },
+    {
+      "kind": "workflow",
+      "refKey": "Seller payout query",
+      "payload": {
+        "description": "Answer a seller asking why their payout changed.",
+        "goal": "Answer a seller asking why their payout changed.",
         "fixedPlan": null
       }
     },
