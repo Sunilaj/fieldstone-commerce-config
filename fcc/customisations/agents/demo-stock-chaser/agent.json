@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Flags SKUs whose cover will run out before the next delivery lands, and drafts the reorder for a buyer to send.",
+  "limitations": "Trusts the recorded stock figure — it cannot detect shrinkage, damage, or a miscount at the source. It does not know about deliveries agreed by phone and not yet in the system.",
   "pinnedModel": null
 }

@@ -1,0 +1,6 @@
+{
+  "name": "Incident Response",
+  "description": "Diagnose and remediate a service incident",
+  "goal": "Investigate and resolve: {service} is experiencing {issue}. Diagnose root cause, propose fix, and apply after approval",
+  "fixedPlan": null
+}

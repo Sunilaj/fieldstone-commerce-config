@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Finds searches and demand signals the catalogue has no answer for.",
+  "limitations": "Sees demand that reached this shop. It cannot see a category customers never thought to look here for.",
   "pinnedModel": null
 }

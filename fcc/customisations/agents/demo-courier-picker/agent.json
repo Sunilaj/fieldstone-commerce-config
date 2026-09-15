@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Picks a courier for each shipment from recorded cost and delivered-on-time history.",
+  "limitations": "Reasons from past performance on this lane, which is not a forecast. It cannot see a strike, a closed road, or a courier who has just lost a depot.",
   "pinnedModel": null
 }

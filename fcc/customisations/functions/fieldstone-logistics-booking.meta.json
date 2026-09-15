@@ -1,0 +1,7 @@
+{
+  "name": "Fieldstone Logistics booking",
+  "tier": "fullcode",
+  "trigger": "manual",
+  "triggerKey": null,
+  "enabled": true
+}

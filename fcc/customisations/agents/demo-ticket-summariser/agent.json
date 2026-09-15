@@ -13,7 +13,7 @@
     "schedule"
   ],
   "subscribedEvents": [],
-  "purpose": null,
-  "limitations": null,
+  "purpose": "Summarises a long support thread for whoever picks it up next.",
+  "limitations": "Summarises what is written in the ticket. A promise made on a phone call, or a detail somebody never typed, is not in the thread and will not be in the summary.",
   "pinnedModel": null
 }

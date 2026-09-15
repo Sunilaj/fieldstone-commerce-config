@@ -1,0 +1,6 @@
+{
+  "name": "Refund backlog clear-down",
+  "description": "Work the refund queue oldest first and escalate what is stuck.",
+  "goal": "Work the refund queue oldest first and escalate what is stuck.",
+  "fixedPlan": null
+}

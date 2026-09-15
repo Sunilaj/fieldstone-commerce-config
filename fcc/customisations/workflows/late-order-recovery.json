@@ -1,0 +1,6 @@
+{
+  "name": "Late order recovery",
+  "description": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
+  "goal": "Find delayed orders, notify customers and open tickets where the SLA is missed.",
+  "fixedPlan": null
+}

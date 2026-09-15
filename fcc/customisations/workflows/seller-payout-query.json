@@ -1,0 +1,6 @@
+{
+  "name": "Seller payout query",
+  "description": "Answer a seller asking why their payout changed.",
+  "goal": "Answer a seller asking why their payout changed.",
+  "fixedPlan": null
+}

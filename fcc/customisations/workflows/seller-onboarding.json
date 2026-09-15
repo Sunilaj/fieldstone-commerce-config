@@ -1,0 +1,6 @@
+{
+  "name": "Seller Onboarding",
+  "description": "Provision and configure all core services for a new seller",
+  "goal": "Onboard a new {vertical} seller: import initial catalog, set pricing rules, configure listings, and complete seller registration",
+  "fixedPlan": null
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Catalogue hygiene sweep",
+  "description": "Find listings with missing attributes or no images.",
+  "goal": "Find listings with missing attributes or no images.",
+  "fixedPlan": null
+}

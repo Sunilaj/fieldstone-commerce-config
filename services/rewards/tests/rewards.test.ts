@@ -10,16 +10,28 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { createHmac } from "node:crypto";
 
 const { verifyMock } = vi.hoisted(() => ({ verifyMock: vi.fn() }));
 vi.mock("../src/platform.js", () => ({ verifyPlatformCall: verifyMock }));
+
+/*
+  What Fieldstone's own deployment holds, and nothing the platform keeps for
+  them: the secret the platform issued when they registered the webhook, and
+  which shop this instance serves. The service reads both from the environment
+  — a webhook payload carries no tenant — so both belong here.
+*/
+const WEBHOOK_SECRET = "test-webhook-secret";
+const TENANT = "t-fieldstone";
 
 let dir: string;
 beforeEach(async () => {
   dir = mkdtempSync(join(tmpdir(), "rewards-"));
   process.env.REWARDS_LEDGER = join(dir, "ledger.json");
+  process.env.FCC_WEBHOOK_SECRET = WEBHOOK_SECRET;
+  process.env.FCC_TENANT_ID = TENANT;
   vi.resetModules();
-  verifyMock.mockResolvedValue({ tenantId: "t-fieldstone", scopes: ["checkout:offer"] });
+  verifyMock.mockResolvedValue({ tenantId: TENANT, scopes: ["checkout:offer"] });
 });
 afterEach(() => rmSync(dir, { recursive: true, force: true }));
 
@@ -34,31 +46,69 @@ const call = async (path: string, body: unknown, headers: Record<string, string>
     body: JSON.stringify(body),
   });
 
-const order = (id: string, totalMinor: number, customerId = "shopper-1") => ({
-  type: "order.placed",
-  data: { orderId: id, customerId, totalMinor },
+/*
+  A webhook is SIGNED, not bearer-authenticated.
+
+  This suite posted a bearer token and no signature, which is not a request the
+  platform has ever made. Every delivery was answered 401, every balance stayed
+  at zero, and the thirteen tests below that begin by buying something were
+  asserting against a shopper who had never earned a point.
+*/
+const sign = (raw: string) =>
+  `sha256=${createHmac("sha256", WEBHOOK_SECRET).update(raw, "utf8").digest("hex")}`;
+
+/** Pass `signature` to send a bad one; pass `""` to send none at all. */
+const hook = async (body: unknown, signature?: string) => {
+  const raw = JSON.stringify(body);
+  const signed = signature === undefined ? sign(raw) : signature;
+  return (await app()).request("/hooks/fcc", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(signed ? { "x-fcc-signature": signed } : {}) },
+    body: raw,
+  });
+};
+
+/*
+  `order.created`, with `totalAmount` in RUPEES — the event the platform emits
+  and the field it carries. This helper sent `order.placed` with `totalMinor`,
+  neither of which the platform sends, so every amount below was also being
+  read in the wrong unit once 1573c74 named it.
+*/
+const order = (id: string, totalAmount: number, customerId = "shopper-1") => ({
+  event: "order.created",
+  data: { orderId: id, customerId, totalAmount },
 });
 
 describe("earning", () => {
-  it("awards a point per rupee on a paid order", async () => {
-    const res = await call("/hooks/fcc", order("o1", 240_00));
+  it("awards a point per ten rupees on a paid order", async () => {
+    // ₹2,400 spent, 240 points — ten per cent back, which is the whole scheme.
+    const res = await hook(order("o1", 2_400));
     expect(await res.json()).toMatchObject({ ok: true, points: 240 });
   });
 
   it("does not award twice for the same order, because webhooks retry", async () => {
-    await call("/hooks/fcc", order("o1", 240_00));
-    const again = await call("/hooks/fcc", order("o1", 240_00));
+    await hook(order("o1", 2_400));
+    const again = await hook(order("o1", 2_400));
     expect(await again.json()).toMatchObject({ duplicate: true });
   });
 
   it("ignores an event it was not built for", async () => {
-    const res = await call("/hooks/fcc", { type: "order.cancelled", data: {} });
+    const res = await hook({ event: "order.cancelled", data: {} });
     expect(await res.json()).toMatchObject({ ignored: "order.cancelled" });
   });
 
   it("refuses an unsigned webhook — this is money", async () => {
-    verifyMock.mockResolvedValue(null);
-    expect((await call("/hooks/fcc", order("o1", 100_00))).status).toBe(401);
+    /*
+      This asked `verifyPlatformCall` to return null, which `/hooks/fcc` never
+      calls: it passed because NOTHING was signed, and it would have gone on
+      passing if the signature check were deleted outright. Both halves of the
+      real refusal are checked now — no signature at all, and one computed with
+      somebody else's secret.
+    */
+    const body = order("o1", 1_000);
+    expect((await hook(body, "")).status).toBe(401);
+    const forged = `sha256=${createHmac("sha256", "not-our-secret").update(JSON.stringify(body), "utf8").digest("hex")}`;
+    expect((await hook(body, forged)).status).toBe(401);
   });
 });
 
@@ -66,18 +116,18 @@ describe("offering", () => {
   const basket = { shopperId: "shopper-1", subtotalMinor: 500_00, currency: "INR" };
 
   it("offers nothing to a shopper with too few points", async () => {
-    await call("/hooks/fcc", order("o1", 50_00));   // 50 points, below the floor
+    await hook(order("o1", 500));   // ₹500 is 50 points, below the floor
     expect(await (await call("/checkout/offers", basket)).json()).toEqual({ offers: [] });
   });
 
   it("offers a redemption once there are enough", async () => {
-    await call("/hooks/fcc", order("o1", 240_00));  // 240 points
+    await hook(order("o1", 2_400));  // 240 points
     const [offer] = (await (await call("/checkout/offers", basket)).json()).offers;
     expect(offer).toMatchObject({ label: "Redeem 200 points", discountMinor: 200_00, currency: "INR" });
   });
 
   it("never offers more than the basket is worth", async () => {
-    await call("/hooks/fcc", order("o1", 5000_00)); // 5000 points
+    await hook(order("o1", 50_000)); // 5000 points
     const [offer] = (await (await call("/checkout/offers", { ...basket, subtotalMinor: 300_00 })).json()).offers;
     // The platform caps this too — but a service that relies on being corrected
     // is wrong the day the correction moves.
@@ -99,7 +149,7 @@ describe("redeeming, which is the binding half", () => {
   const basket = { shopperId: "shopper-1", subtotalMinor: 500_00, currency: "INR" };
 
   async function offered() {
-    await call("/hooks/fcc", order("o1", 240_00));
+    await hook(order("o1", 2_400));
     const [offer] = (await (await call("/checkout/offers", basket)).json()).offers;
     return offer.id as string;
   }
@@ -124,7 +174,7 @@ describe("redeeming, which is the binding half", () => {
   it("is single-use even when the shopper has plenty of points left", async () => {
     // The case the original test could not see: a large balance, so the second
     // attempt cannot be refused for affordability.
-    await call("/hooks/fcc", order("big", 4000_00));
+    await hook(order("big", 40_000));
     const [offer] = (await (await call("/checkout/offers", basket)).json()).offers;
     expect((await (await call("/checkout/redeem", { offerId: offer.id, ...basket })).json()).ok).toBe(true);
     const again = await (await call("/checkout/redeem", { offerId: offer.id, ...basket })).json();
@@ -177,7 +227,7 @@ describe("deciding whether an order may proceed at all", () => {
 
 describe("what one tenant can see of another", () => {
   it("balances are scoped to the tenant in the token", async () => {
-    await call("/hooks/fcc", order("o1", 500_00));
+    await hook(order("o1", 5_000));  // 500 points, so "none of them" means something
     verifyMock.mockResolvedValue({ tenantId: "a-different-tenant", scopes: [] });
     const res = await (await call("/checkout/offers", { shopperId: "shopper-1", subtotalMinor: 500_00, currency: "INR" })).json();
     // The same shopper id, a different tenant, and none of the points.
@@ -194,7 +244,7 @@ describe("what one tenant can see of another", () => {
 
 /** Earn a balance the way a shopper would: by buying something. */
 const earn = (points: number, shopperId = "shopper-1") =>
-  call("/hooks/fcc", order(`o-${shopperId}-${points}`, points * 100, shopperId));
+  hook(order(`o-${shopperId}-${points}`, points * 10, shopperId));
 
 describe("badging a product", () => {
   it("says what a product earns, for every sku asked about", async () => {
@@ -312,9 +362,16 @@ describe("merchandising", () => {
 describe("enriching a paid order", () => {
   it("attaches the tier and what the order earned", async () => {
     await earn(1_500);
-    const res = await call("/order/enrich", { orderId: "ORD-1", shopperId: "shopper-1", totalMinor: 40_000 });
+    /*
+      `order.enrich` is sent `totalMinor`, in PAISE — the webhook is sent
+      `totalAmount`, in rupees. That is the disagreement 1573c74 named, and it
+      is why the same ₹400 is written two ways in this file. ₹400 earns 40
+      points, not 400: this expectation was written when a point cost a rupee
+      and it outlived the scheme it described.
+    */
+    const res = await call("/order/enrich", { orderId: "ORD-1", shopperId: "shopper-1", totalMinor: 400_00 });
     const { attributes } = await res.json() as { attributes: Record<string, string> };
-    expect(attributes).toMatchObject({ loyaltyScheme: "Fieldstone Rewards", memberTier: "Gold", pointsEarned: "400" });
+    expect(attributes).toMatchObject({ loyaltyScheme: "Fieldstone Rewards", memberTier: "Gold", pointsEarned: "40" });
     // Every value a string: the platform stores these as text and a number
     // here would come back as one shape on write and another on read.
     for (const v of Object.values(attributes)) expect(typeof v).toBe("string");
@@ -372,7 +429,16 @@ describe("what a shopper is told about their basket", () => {
   it("says how far they are from the next tier", async () => {
     await earn(400);
     const body = await (await call("/ui/cart-summary", { shopperId: "shopper-1" })).json() as { elements: Array<{ text: string }> };
-    expect(body.elements[0].text).toMatch(/600 more to reach Gold/);
+    expect(body.elements[0].text).toMatch(/100 more to reach Gold/);
+  });
+
+  it("does not tell a Gold member to keep buying to reach Gold", async () => {
+    /* Six hundred is Gold on today's ladder and was not on the old one, which
+       is exactly the gap the previous test at fifteen hundred stepped over. */
+    await earn(600);
+    const body = await (await call("/ui/cart-summary", { shopperId: "shopper-1" })).json() as { elements: Array<{ text: string; tone: string }> };
+    expect(body.elements[0].text).not.toMatch(/reach Gold/);
+    expect(body.elements[0].tone).toBe("success");
   });
 
   it("says something useful once they are past it, rather than a negative number", async () => {
