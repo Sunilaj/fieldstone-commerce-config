@@ -6,41 +6,9 @@
     "version": "1.0.0",
     "requiresApi": "v1",
     "originTenant": "fieldstone-dev",
-    "exportedAt": "2026-09-15T11:18:54.101Z"
+    "exportedAt": "2026-09-15T11:21:32.600Z"
   },
   "elements": [
-    {
-      "kind": "branding",
-      "refKey": "default",
-      "payload": {
-        "primaryColor": "#1F2937",
-        "logoUrl": null
-      }
-    },
-    {
-      "kind": "custom-function",
-      "refKey": "Auto-approve clean reviews 14",
-      "payload": {
-        "name": "Auto-approve clean reviews 14",
-        "tier": "nocode",
-        "trigger": "webhook_event",
-        "triggerKey": "review.submitted",
-        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
-        "enabled": false
-      }
-    },
-    {
-      "kind": "custom-function",
-      "refKey": "Auto-approve clean reviews 18",
-      "payload": {
-        "name": "Auto-approve clean reviews 18",
-        "tier": "nocode",
-        "trigger": "webhook_event",
-        "triggerKey": "review.submitted",
-        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
-        "enabled": true
-      }
-    },
     {
       "kind": "custom-function",
       "refKey": "Auto-approve clean reviews 2",
@@ -623,6 +591,38 @@
       }
     },
     {
+      "kind": "branding",
+      "refKey": "default",
+      "payload": {
+        "primaryColor": "#1F2937",
+        "logoUrl": null
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Auto-approve clean reviews 14",
+      "payload": {
+        "name": "Auto-approve clean reviews 14",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "review.submitted",
+        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
+        "enabled": false
+      }
+    },
+    {
+      "kind": "custom-function",
+      "refKey": "Auto-approve clean reviews 18",
+      "payload": {
+        "name": "Auto-approve clean reviews 18",
+        "tier": "nocode",
+        "trigger": "webhook_event",
+        "triggerKey": "review.submitted",
+        "code": "if ((data.rating ?? 0) < 3) return {};\nreturn { actions: [{ action: \"moderate_review\", reviewId: data.reviewId, status: \"APPROVED\" }] };",
+        "enabled": true
+      }
+    },
+    {
       "kind": "agent",
       "refKey": "demo-courier-picker",
       "payload": {
@@ -868,6 +868,15 @@
       }
     },
     {
+      "kind": "workflow",
+      "refKey": "Seller payout query",
+      "payload": {
+        "description": "Answer a seller asking why their payout changed.",
+        "goal": "Answer a seller asking why their payout changed.",
+        "fixedPlan": null
+      }
+    },
+    {
       "kind": "agent",
       "refKey": "review-tone-watch",
       "payload": {
@@ -1106,15 +1115,6 @@
       "payload": {
         "description": "Provision and configure all core services for a new seller",
         "goal": "Onboard a new {vertical} seller: import initial catalog, set pricing rules, configure listings, and complete seller registration",
-        "fixedPlan": null
-      }
-    },
-    {
-      "kind": "workflow",
-      "refKey": "Seller payout query",
-      "payload": {
-        "description": "Answer a seller asking why their payout changed.",
-        "goal": "Answer a seller asking why their payout changed.",
         "fixedPlan": null
       }
     },
